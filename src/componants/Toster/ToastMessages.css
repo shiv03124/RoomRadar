@@ -1,0 +1,21 @@
+/* src/components/ToastMessages.css */
+
+.toast-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toast-spinner {
+  /* Tailwind classes are mostly fine, but you can override or add custom here */
+}
+
+.toast-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toast-icon {
+  /* Size and color controlled via Tailwind, but can add overrides here */
+}
