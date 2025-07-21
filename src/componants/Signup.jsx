@@ -205,7 +205,6 @@ const [cities, setCities] = useState([]);
               autoFocus
             />
             {error && <p className="text-red-600 text-sm">{error}</p>}
-
             <button
               onClick={sendOtp}
               disabled={loading}
