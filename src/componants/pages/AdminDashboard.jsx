@@ -36,7 +36,7 @@ const AdminDashboard = ({ userData }) => {
     const loadRooms = async () => {
       try {
         const token = sessionStorage.getItem('token');
-        const data = await fetchRooms(`http://localhost:8080/api/rooms/getAllRoomsWithoutApprove`);
+        const data = await fetchRooms(`https://roomradarbackend-production.up.railway.app/api/rooms/getAllRoomsWithoutApprove`);
         setRooms(data);
       } catch (err) {
         setError(err.message);
