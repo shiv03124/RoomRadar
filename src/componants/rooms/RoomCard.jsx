@@ -110,7 +110,7 @@ const RoomCard = ({
       }
 
       const response = await fetch(
-        `https://localhost:8080/api/applications/status?userId=${userId}&roomId=${room.id}`,
+        `http://localhost:8080/api/applications/status?userId=${userId}&roomId=${room.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

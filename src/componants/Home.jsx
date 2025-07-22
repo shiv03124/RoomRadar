@@ -189,7 +189,7 @@ const Home = () => {
               >
                 <div className="w-80 h-80 md:w-96 md:h-96 bg-white rounded-2xl shadow-xl overflow-hidden border-8 border-white">
                   <img 
-                    src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                    src="http://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
                     alt="Beautiful apartment"
                     className="w-full h-full object-cover"
                   />
@@ -434,19 +434,19 @@ const Home = () => {
                 quote: "Found my perfect roommate and apartment in just one week! RoomRadar made the process so easy.",
                 author: "Sarah J., New York",
                 rating: 5,
-                avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+                avatar: "http://randomuser.me/api/portraits/women/44.jpg"
               },
               {
                 quote: "As a landlord, I've never filled vacancies so quickly. The quality of applicants is excellent.",
                 author: "Michael T., Chicago",
                 rating: 5,
-                avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+                avatar: "http://randomuser.me/api/portraits/men/32.jpg"
               },
               {
                 quote: "The roommate matching algorithm is spot on. I'm living with my best friend thanks to RoomRadar!",
                 author: "Emily R., Austin",
                 rating: 5,
-                avatar: "https://randomuser.me/api/portraits/women/68.jpg"
+                avatar: "http://randomuser.me/api/portraits/women/68.jpg"
               }
             ].map((testimonial, index) => (
               <motion.div

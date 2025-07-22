@@ -40,7 +40,7 @@ const ProfileDropdown = ({ userData, setUserData }) => {
   src={
     userData?.profileImageUrl?.trim()
       ? userData.profileImageUrl
-      : 'https://randomuser.me/api/portraits/men/1.jpg'
+      : 'http://randomuser.me/api/portraits/men/1.jpg'
   }
   alt="User profile"
 />
