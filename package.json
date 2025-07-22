@@ -30,12 +30,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://your-render-backend-url.com/api/:path*"
-    }
-  ],
   "eslintConfig": {
     "extends": [
       "react-app",
