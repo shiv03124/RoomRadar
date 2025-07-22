@@ -80,7 +80,7 @@ const [cities, setCities] = useState([]);
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`https://localhost:8080/api/otp/send?email=${encodeURIComponent(email)}`, {
+      const res = await fetch(`http://localhost:8080/api/otp/send?email=${encodeURIComponent(email)}`, {
         method: 'POST',
       });
       if (!res.ok) throw new Error('Failed to send OTP');
@@ -99,7 +99,7 @@ const [cities, setCities] = useState([]);
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`https://localhost:8080/api/otp/verify?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
+      const res = await fetch(`http://localhost:8080/api/otp/verify?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -125,14 +125,14 @@ const [cities, setCities] = useState([]);
     setError('');
 
     try {
-      const emailRes = await fetch(`https://localhost:8080/api/users/check-email?email=${encodeURIComponent(email)}`);
+      const emailRes = await fetch(`http://localhost:8080/api/users/check-email?email=${encodeURIComponent(email)}`);
       if ((await emailRes.text()) === 'exists') {
         toast.custom((t) => <ErrorToast message="Email is already registered" t={t} />);
         return;
       }
 
       if (formData.phone) {
-        const phoneRes = await fetch(`https://localhost:8080/api/users/check-phone?phone=${encodeURIComponent(formData.phone)}`);
+        const phoneRes = await fetch(`http://localhost:8080/api/users/check-phone?phone=${encodeURIComponent(formData.phone)}`);
         if ((await phoneRes.text()) === 'exists') {
           toast.custom((t) => <ErrorToast message="Phone number is already registered" t={t} />);
           return;
@@ -152,7 +152,7 @@ const [cities, setCities] = useState([]);
         formPayload.append('image', profileImage);
       }
 
-      const res = await fetch('https://localhost:8080/api/users/saveUser', {
+      const res = await fetch('http://localhost:8080/api/users/saveUser', {
         method: 'POST',
         body: formPayload,
       });
