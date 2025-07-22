@@ -166,9 +166,9 @@ const Home = () => {
 
               <div className="mt-12 flex flex-wrap gap-6">
                 {[
-                  { icon: <FaMapMarkerAlt className="text-indigo-600" />, text: '10,000+ Locations' },
-                  { icon: <IoIosPeople className="text-purple-600 text-xl" />, text: '50,000+ Happy Users' },
-                  { icon: <GiHouseKeys className="text-pink-600" />, text: '30,000+ Listings' }
+                  { icon: <FaMapMarkerAlt className="text-indigo-600" />, text: '100+ Locations' },
+                  { icon: <IoIosPeople className="text-purple-600 text-xl" />, text: '5000+ Happy Users' },
+                  { icon: <GiHouseKeys className="text-pink-600" />, text: '3000+ Listings' }
                 ].map((item, index) => (
                   <motion.div 
                     key={index}
@@ -205,7 +205,7 @@ const Home = () => {
                       <FaUser className="text-indigo-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold">Sarah Johnson</h4>
+                      <h4 className="font-semibold">Sarah Joshi</h4>
                       <p className="text-sm text-gray-500">Found her perfect home</p>
                     </div>
                   </div>
@@ -219,7 +219,7 @@ const Home = () => {
                   className="absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-gray-100 w-56"
                 >
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold">$1,200/mo</span>
+                    <span className="font-semibold">₹2500/mo</span>
                     <div className="flex items-center text-yellow-400">
                       <FaStar />
                       <span className="ml-1 text-gray-700">4.9</span>
@@ -227,11 +227,11 @@ const Home = () => {
                   </div>
                   <div className="flex items-center text-sm text-gray-500">
                     <FaMapMarkerAlt className="mr-1 text-indigo-500" />
-                    <span>Downtown, NYC</span>
+                    <span>Kothrud, Pune</span>
                   </div>
                   <div className="mt-2 flex justify-between text-xs">
                     <span className="flex items-center"><FaRulerCombined className="mr-1" /> 850 sqft</span>
-                    <span className="flex items-center"><FaMoneyBillWave className="mr-1" /> Utilities included</span>
+                    <span className="flex items-center"><FaMoneyBillWave className="mr-1" /> Security included</span>
                   </div>
                 </motion.div>
               </motion.div>
@@ -370,7 +370,7 @@ const Home = () => {
                   center: true
                 },
                 {
-                  icon: <GiHouseKeys className="text-2xl text-white" />,
+                  icon: <GiHouseKeys className="text-2xl text-black " />,
                   title: "3. Move In",
                   description: "Finalize agreements and move into your perfect space hassle-free.",
                   color: "pink"
@@ -432,19 +432,19 @@ const Home = () => {
             {[
               {
                 quote: "Found my perfect roommate and apartment in just one week! RoomRadar made the process so easy.",
-                author: "Sarah J., New York",
+                author: "Vaishali Kalbhor, Pune",
                 rating: 5,
                 avatar: "http://randomuser.me/api/portraits/women/44.jpg"
               },
               {
                 quote: "As a landlord, I've never filled vacancies so quickly. The quality of applicants is excellent.",
-                author: "Michael T., Chicago",
+                author: "Rahul Sharma,  pune",
                 rating: 5,
                 avatar: "http://randomuser.me/api/portraits/men/32.jpg"
               },
               {
                 quote: "The roommate matching algorithm is spot on. I'm living with my best friend thanks to RoomRadar!",
-                author: "Emily R., Austin",
+                author: "Sakshi Rathod, Shivaji nagar",
                 rating: 5,
                 avatar: "http://randomuser.me/api/portraits/women/68.jpg"
               }
@@ -535,7 +535,7 @@ const Home = () => {
                 <span className="text-xl font-bold text-white">RoomRadar</span>
               </div>
               <p className="mb-6">Making housing searches simple, fast, and reliable since 2023.</p>
-              <div className="flex space-x-4">
+              {/* <div className="flex space-x-4">
                 {['Facebook', 'Twitter', 'Instagram', 'LinkedIn'].map((social, index) => (
                   <motion.a 
                     key={index}
@@ -546,7 +546,7 @@ const Home = () => {
                     {social}
                   </motion.a>
                 ))}
-              </div>
+              </div> */}
             </div>
             
             <div>
@@ -605,11 +605,11 @@ const Home = () => {
           
           <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
             <p>© {new Date().getFullYear()} RoomRadar. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            {/* <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
               <a href="#" className="hover:text-white transition-colors">Cookies</a>
-            </div>
+            </div> */}
           </div>
         </div>
       </motion.footer>
