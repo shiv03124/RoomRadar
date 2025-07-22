@@ -110,7 +110,7 @@ const RoomCard = ({
       }
 
       const response = await fetch(
-        `https://roomradarbackend-production.up.railway.app/api/applications/status?userId=${userId}&roomId=${room.id}`,
+        `https://localhost:8080/api/applications/status?userId=${userId}&roomId=${room.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

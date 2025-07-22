@@ -18,8 +18,8 @@
 
 // //     try {
 // //       const loginUrl = isAdminLogin
-// //         ? 'https://roomradarbackend-production.up.railway.app/auth/login/admin'
-// //         : 'https://roomradarbackend-production.up.railway.app/auth/login';
+// //         ? 'https://localhost:8080/auth/login/admin'
+// //         : 'https://localhost:8080/auth/login';
 
 // //       const response = await fetch(loginUrl, {
 // //         method: 'POST',
@@ -191,8 +191,8 @@
 
 //     try {
 //       const loginUrl = isAdminLogin
-//         ? 'https://roomradarbackend-production.up.railway.app/auth/login/admin'
-//         : 'https://roomradarbackend-production.up.railway.app/auth/login';
+//         ? 'https://localhost:8080/auth/login/admin'
+//         : 'https://localhost:8080/auth/login';
 
 //       const response = await fetch(loginUrl, {
 //         method: 'POST',
@@ -355,8 +355,8 @@ const Login = () => {
 
     try {
       const loginUrl = isAdminLogin
-        ? 'https://roomradarbackend-production.up.railway.app/auth/login/admin'
-        : 'https://roomradarbackend-production.up.railway.app/auth/login';
+        ? 'https://localhost:8080/auth/login/admin'
+        : 'https://localhost:8080/auth/login';
 
       const response = await fetch(loginUrl, {
         method: 'POST',

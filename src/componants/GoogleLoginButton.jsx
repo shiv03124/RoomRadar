@@ -16,7 +16,7 @@ const GoogleLoginButton = () => {
       const email = decoded.email;
 
       const response = await fetch(
-        `https://roomradarbackend-production.up.railway.app/auth/auth/google?email=${encodeURIComponent(email)}`,
+        `https://localhost:8080/auth/auth/google?email=${encodeURIComponent(email)}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
