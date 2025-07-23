@@ -125,7 +125,7 @@ const AdminDashboard = ({ userData }) => {
       </div>
 
       {/* Overlay for mobile sidebar */}
-      {sidebarOpen && isMobile && (
+      {sidebarOpen && isMobile && ( 
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={() => setSidebarOpen(false)}

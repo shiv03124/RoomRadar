@@ -51,10 +51,15 @@ const Login = () => {
     }
 
     // ⬇️ Fetch user profile and store userId
-    const profile = await fetchUserProfile(navigate);
-    if (profile && profile.id) {
-      sessionStorage.setItem('userId', profile.id);
-    }
+  if (isAdminLogin) {
+  sessionStorage.setItem('authToken', data.token);
+  sessionStorage.setItem('adminEmail', email);
+} else {
+  const profile = await fetchUserProfile(navigate);
+  if (profile && profile.id) {
+    sessionStorage.setItem('userId', profile.id);
+  }
+}
 
     // ⬇️ Navigate after profile fetch
     navigate(isAdminLogin ? '/admindashboard' : '/dashboard');
