@@ -68,7 +68,7 @@ const AddRoomModal = ({ onClose, onRoomAdded, userData }) => {
     if (newRoom.accommodationType === 'Flat' && !newRoom.configuration) {
       throw new Error('Please specify the configuration for a Flat (e.g., 1BHK, 2BHK)');
     }
-
+ 
     if (!newRoom.images || newRoom.images.length === 0) {
   setImageError('At least one image is required');
   return; // or throw error

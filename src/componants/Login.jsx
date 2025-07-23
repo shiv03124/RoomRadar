@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import image from '../componants/images/background.jpg'
+import { fetchUserProfile } from './utils/fetchUserProfile'; 
 
 const Login = () => {
   const { login } = useAuth();
@@ -13,48 +14,57 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+  e.preventDefault();
+  setIsLoading(true);
+  setError('');
 
-    try {
-      const loginUrl = isAdminLogin
-        ? 'https://roomradarbackend.onrender.com/auth/login/admin'
-        : 'https://roomradarbackend.onrender.com/auth/login';
+  try {
+    const loginUrl = isAdminLogin
+      ? 'https://roomradarbackend.onrender.com/auth/login/admin'
+      : 'https://roomradarbackend.onrender.com/auth/login';
 
-      const response = await fetch(loginUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+    const response = await fetch(loginUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (!response.ok) {
-        throw new Error('Login failed. Please check your credentials.');
-      }
-
-      const data = await response.json();
-
-      if (!data.token) {
-        throw new Error('No token received from server.');
-      }
-
-      login(data.token, email);
-      sessionStorage.setItem('token', data.token);
-      sessionStorage.setItem('email', email);
-      sessionStorage.setItem('role', isAdminLogin ? 'admin' : 'user');
-
-      if (isAdminLogin) {
-        sessionStorage.setItem('authToken', data.token);
-        sessionStorage.setItem('adminEmail', email);
-      }
-
-      navigate(isAdminLogin ? '/admindashboard' : '/dashboard');
-    } catch (err) {
-      setError(err.message || 'An error occurred during login');
-    } finally {
-      setIsLoading(false);
+    if (!response.ok) {
+      throw new Error('Login failed. Please check your credentials.');
     }
-  };
+
+    const data = await response.json();
+
+    if (!data.token) {
+      throw new Error('No token received from server.');
+    }
+
+    // Store token, email, role
+    login(data.token, email);
+    sessionStorage.setItem('token', data.token);
+    sessionStorage.setItem('email', email);
+    sessionStorage.setItem('role', isAdminLogin ? 'admin' : 'user');
+
+    if (isAdminLogin) {
+      sessionStorage.setItem('authToken', data.token);
+      sessionStorage.setItem('adminEmail', email);
+    }
+
+    // ⬇️ Fetch user profile and store userId
+    const profile = await fetchUserProfile(navigate);
+    if (profile && profile.id) {
+      sessionStorage.setItem('userId', profile.id);
+    }
+
+    // ⬇️ Navigate after profile fetch
+    navigate(isAdminLogin ? '/admindashboard' : '/dashboard');
+
+  } catch (err) {
+    setError(err.message || 'An error occurred during login');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat" 
