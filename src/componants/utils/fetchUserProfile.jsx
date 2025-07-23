@@ -238,6 +238,7 @@ export const addRoom = async (newRoom, userId) => {
     furnished: newRoom.furnished,
     availableFrom: newRoom.availableFrom,
     rent: newRoom.rent,
+    totalNoOfPeoples:newRoom.totalNoOfPeoples,
     securityDeposit: newRoom.securityDeposit,
     preferredGender: newRoom.preferredGender,
     isAvailable: newRoom.isAvailable,
