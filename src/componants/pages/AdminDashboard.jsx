@@ -189,7 +189,7 @@ const AdminDashboard = ({ userData }) => {
               onViewDetails={setSelectedRoom}
               isAppliedView={false}
             />
-          )}
+          )} 
         </motion.div>
 
         {selectedRoom && (
