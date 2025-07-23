@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../images/image.png';
+import logo from '../images/logoimage.png';
 import ProfileDropdown from '../ProfileDropdown';
 import AddRoomModal from '../rooms/AddRoomModal';
 import toast from 'react-hot-toast';
@@ -28,25 +28,26 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
 
   return (
     <nav className={`bg-white shadow-sm ${className}`} style={style}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8">
         <div className="flex justify-between  h-16">
           {/* Logo */}
           <div className="flex items-center">
             <div className="h-10 flex items-center cursor-pointer" onClick={() => navigate('/dashboard')}>
               <img
-                src={logo}
-                alt="RoomRadar Logo"
-                className="h-full w-auto object-contain"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = '';
-                  e.target.parentElement.innerHTML = `
-                    <span class="text-2xl font-bold text-red-600">
-                      RoomRadar
-                    </span>
-                  `;
-                }}
-              />
+  src={logo}
+  alt="RoomRadar Logo"
+  className="h-full w-auto object-contain scale-110 sm:scale-125 transition-transform duration-200"
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = '';
+    e.target.parentElement.innerHTML = `
+      <span class="text-2xl font-bold text-red-600">
+        RoomRadar
+      </span>
+    `;
+  }}
+/>
+
             </div>
           </div>
 
