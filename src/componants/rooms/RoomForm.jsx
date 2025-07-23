@@ -262,6 +262,24 @@ const RoomForm = ({
           </div>
         )}
 
+{room.accommodationType === 'Flat' && (
+  <div className="sm:col-span-3">
+    <label htmlFor="totalNoOfPeople" className="block text-sm font-medium text-gray-700 mb-1">
+      Total No. of People<span className="text-red-500">*</span>
+    </label>
+    <input
+      type="number"
+      name="totalNoOfPeople"
+      id="totalNoOfPeople"
+      value={room.totalNoOfPeople}
+      onChange={handleInputChange}
+      min="1"
+      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+      required
+    />
+  </div>
+)}
+
         {/* Vacancies and Furnished */}
         <div className="sm:col-span-3">
           <label htmlFor="noofvacancies" className="block text-sm font-medium text-gray-700 mb-1">
