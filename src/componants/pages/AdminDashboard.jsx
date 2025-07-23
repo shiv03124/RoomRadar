@@ -36,7 +36,7 @@ const AdminDashboard = ({ userData }) => {
     const loadRooms = async () => {
       try {
         const token = sessionStorage.getItem('token');
-        const data = await fetchRooms(`'https://roomradarbackend.onrender.com/api/rooms/getAllRoomsWithoutApprove`);
+        const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/getAllRoomsWithoutApprove`);
         setRooms(data);
       } catch (err) {
         setError(err.message);
