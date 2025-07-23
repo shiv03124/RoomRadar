@@ -668,7 +668,7 @@ const Signup = () => {
         <div className="hidden md:flex md:w-1/2 h-full">
           <img src={signupimage} alt="Community" className="w-full h-full object-cover" />
         </div>
-      )}
+      )}   
 
       <div className={`flex flex-col w-full ${margin ? 'mt-14 md:mt-8' : 'mt-0'} ${stage !== 'form' ? 'md:w-1/2' : 'md:w-full'} h-full overflow-auto p-4 md:p-8 relative`}>
         {/* Logo - positioned differently on mobile vs desktop */}

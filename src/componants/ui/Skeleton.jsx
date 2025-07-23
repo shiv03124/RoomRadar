@@ -7,4 +7,4 @@ export const Skeleton = ({ className, ...props }) => {
       {...props}
     />
   );
-};
+}; 
