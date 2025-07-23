@@ -26,7 +26,7 @@ const AddRoomModal = ({ onClose, onRoomAdded, userData }) => {
     rent: '',
     securityDeposit: '',
     preferredGender: '',
-    totalNoOfPeople:'',
+    totalNoOfPeoples:'',
     isAvailable: true,
     amenities: [],
     images: [],

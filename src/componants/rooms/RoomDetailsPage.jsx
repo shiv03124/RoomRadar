@@ -183,8 +183,8 @@ const roomAmenities = room?.amenities || [];
                     <p className="font-bold text-sm sm:text-base text-blue-600">₹{room.rent?.toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Type</p>
-                    <p className="font-medium text-xs sm:text-sm">{room.totalNoOfPeople}</p>
+                    <p className="text-xs text-gray-500">Total No Of People</p>
+                    <p className="font-medium text-xs sm:text-sm">{room.totalNoOfPeoples}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Furnishing</p>
