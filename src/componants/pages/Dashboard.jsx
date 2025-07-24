@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const renderSkeletonCards = () => {
+    
     const skeletonArray = new Array(4).fill(null);
     return (
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -64,6 +65,31 @@ const Dashboard = () => {
       </div>
     );
   };
+  const loadDefaultRooms = async () => {
+  const token = sessionStorage.getItem('token');
+  try {
+    setLoading(true);
+    if (!token) {
+      const data = await fetchRooms('https://roomradarbackend-api.onrender.com/api/rooms/', null);
+      setRooms(data);
+      setUserData(null);
+    } else {
+      const user = await fetchUserProfile();
+      if (!user?.id) throw new Error('User ID not available');
+      sessionStorage.setItem('userId', user.id);
+      setUserData(user);
+      const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/not-applied/${user.id}`, token);
+      setRooms(data);
+    }
+  } catch (err) {
+    setError(err.message);
+    sessionStorage.clear();
+    setUserData(null);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     const loadDefaultRooms = async () => {
@@ -71,7 +97,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
         if (!token) {
-          const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
+          const data = await fetchRooms('https://roomradarbackend-api.onrender.com/api/rooms/', null);
           setRooms(data);
           setUserData(null);
         } else {
@@ -79,7 +105,7 @@ const Dashboard = () => {
           if (!user?.id) throw new Error('User ID not available');
           sessionStorage.setItem('userId', user.id);
           setUserData(user);
-          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${user.id}`, token);
+          const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/not-applied/${user.id}`, token);
           setRooms(data);
         }
       } catch (err) {
@@ -102,17 +128,17 @@ const Dashboard = () => {
       try {
         setLoading(true);
         if (activeTab === 'My Listings') {
-          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/user/${userData.id}`, token);
+          const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/user/${userData.id}`, token);
           setRooms(data);
         } else if (activeTab === 'Applied Rooms') {
-          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/applied/${userData.id}`, token);
+          const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/applied/${userData.id}`, token);
           setAppliedRooms(data);
         } else {
           if (!token) {
-            const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
+            const data = await fetchRooms('https://roomradarbackend-api.onrender.com/api/rooms/', null);
             setRooms(data);
           } else {
-            const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${userData.id}`, token);
+            const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/not-applied/${userData.id}`, token);
             setRooms(data);
           }
         }
@@ -159,7 +185,7 @@ const Dashboard = () => {
       if (userId && !isNaN(userId)) params.append('userId', userId);
       filters.amenities.forEach(a => params.append('amenities', a));
 
-      const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/search?${params.toString()}`);
+      const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/search?${params.toString()}`);
       setRooms(data);
       setIsSearching(false);
     } catch (err) {
@@ -175,9 +201,8 @@ const Dashboard = () => {
   };
 
   const handleToggleDetails = (roomId) => {
-    setExpandedRoomId(prevId => (prevId === roomId ? null : roomId));
-  };
-
+  setExpandedRoomId(prevId => (prevId === roomId ? null : roomId));
+};
   useEffect(() => {
     if (mobileFilterOpen) setShowFilters(false);
   }, [mobileFilterOpen]);
@@ -191,16 +216,24 @@ const Dashboard = () => {
           <div className="flex flex-col items-start gap-2">
             {/* All Listings with Hamburger */}
             <div className="flex items-center justify-between w-full">
-              <button
-                onClick={() => setActiveTab('All Listings')}
-                className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
-                  activeTab === 'All Listings'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                All Listings
-              </button>
+             <button
+  onClick={() => {
+    if (activeTab === 'All Listings') {
+      // Refresh data
+      loadDefaultRooms();
+    } else {
+      setActiveTab('All Listings');
+    }
+  }}
+  className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
+    activeTab === 'All Listings'
+      ? 'bg-[#0662B7] text-white shadow-md'
+      : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+  }`}
+>
+  All Listings
+</button>
+
               <button
                 onClick={() => setMobileFilterOpen(prev => !prev)}
                 className="p-2 rounded-md bg-gray-100 hover:bg-gray-200"
@@ -214,7 +247,7 @@ const Dashboard = () => {
                 onClick={() => setActiveTab('My Listings')}
                 className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
                   activeTab === 'My Listings'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#0662B7] text-white shadow-md'
                     : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
                 }`}
               >
@@ -227,7 +260,7 @@ const Dashboard = () => {
                 onClick={() => setActiveTab('Applied Rooms')}
                 className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
                   activeTab === 'Applied Rooms'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#0662B7] text-white shadow-md'
                     : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
                 }`}
               >
@@ -246,7 +279,7 @@ const Dashboard = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
                   activeTab === tab
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-[#0662B7] text-white shadow-md'
                     : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
                 }`}
               >
@@ -322,50 +355,65 @@ const Dashboard = () => {
             />
           ) : (
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(activeTab === 'Applied Rooms' ? appliedRooms : rooms).map((room) => (
-                <React.Fragment key={room.id}>
-                  <div className="w-full">
-                    <RoomCard
-                      room={room}
-                      activeTab={activeTab}
-                      onFetchApplications={handleFetchApplications}
-                      isAppliedView={activeTab === 'Applied Rooms'}
-                      onToggleDetails={handleToggleDetails}
-                      isExpanded={expandedRoomId === room.id}
-                      onViewDetails={() => handleViewDetails(room)}
-                    />
-                  </div>
+  {(activeTab === 'Applied Rooms' ? appliedRooms : rooms).map((room) => (
+    <React.Fragment key={room.id}>
+      <div className="w-full">
+        <RoomCard
+          room={room}
+          activeTab={activeTab}
+          onFetchApplications={handleFetchApplications}
+          isAppliedView={activeTab === 'Applied Rooms'}
+          onToggleDetails={handleToggleDetails}
+          isExpanded={expandedRoomId === room.id}
+          onViewDetails={() => handleViewDetails(room)}
+          onCloseDetails={() => setExpandedRoomId(null)}
+        />
+      </div>
 
-                  <AnimatePresence>
-                    {selectedRoom && selectedRoom.id === room.id && (
-                      <motion.div
-                        className="md:col-span-2 w-full"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{
-                          opacity: 1,
-                          height: 'auto',
-                          transition: {
-                            opacity: { duration: 0.3 },
-                            height: { duration: 0.4 }
-                          }
-                        }}
-                        exit={{
-                          opacity: 0,
-                          height: 0,
-                          transition: {
-                            opacity: { duration: 0.2 },
-                            height: { duration: 0.3 }
-                          }
-                        }}
-                        layout
-                      >
-                        <RoomDetailsPage roomId={room.id} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </React.Fragment>
-              ))}
-            </div>
+      {/* Add the AnimatePresence block right here */}
+      <AnimatePresence>
+        {selectedRoom && selectedRoom.id === room.id && (
+          <motion.div
+            className="md:col-span-2 w-full relative"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{
+              opacity: 1,
+              height: 'auto',
+              transition: {
+                opacity: { duration: 0.3 },
+                height: { duration: 0.4 }
+              }
+            }}
+            exit={{
+              opacity: 0,
+              height: 0,
+              transition: {
+                opacity: { duration: 0.2 },
+                height: { duration: 0.3 }
+              }
+            }}
+            layout
+          >
+            <button
+              onClick={() => setSelectedRoom(null)}
+              className="absolute top-4 right-4 z-50 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+              style={{ zIndex: 1000 }}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            <RoomDetailsPage 
+              roomId={room.id} 
+              onClose={() => setSelectedRoom(null)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </React.Fragment>
+  ))}
+</div>
           )}
         </>
       )}

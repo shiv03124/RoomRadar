@@ -14,7 +14,8 @@ const RoomCard = ({
   isAppliedView = false,
   onToggleDetails,
   isExpanded = false,
-  onViewDetails
+  onViewDetails,
+  onCloseDetails
 }) => {
   const navigate = useNavigate();
 
@@ -110,7 +111,7 @@ const RoomCard = ({
       }
 
       const response = await fetch(
-        `'https://roomradarbackend.onrender.com/api/applications/status?userId=${userId}&roomId=${room.id}`,
+        `'https://roomradarbackend-api.onrender.com/api/applications/status?userId=${userId}&roomId=${room.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -213,7 +214,7 @@ const RoomCard = ({
                 <>
                   <button
                     onClick={(e) => { e.stopPropagation(); onViewDetails(e); }}
-                    className="min-w-[200px] px-4 py-1.5 whitespace-nowrap text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                    className="min-w-[200px] px-4 py-1.5 whitespace-nowrap text-sm rounded-md bg-[#0662B7] text-white hover:bg-indigo-700"
                   >
                     View
                   </button>
@@ -229,7 +230,7 @@ const RoomCard = ({
                   <button
                     onClick={(e) => { e.stopPropagation(); onViewDetails(e); }}
                     // <== VIEW button always same styling, no condition here
-                    className="min-w-[200px] px-4 py-1.5 md:pb-2 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                    className="min-w-[200px] px-4 py-1.5 md:pb-2 text-sm rounded-md bg-[#0662B7] text-white hover:bg-indigo-700"
                   >
                     View
                   </button>
@@ -237,7 +238,7 @@ const RoomCard = ({
                   {activeTab === 'My Listings' && (
                     <button
                       onClick={(e) => { e.stopPropagation(); handleApplicationsClick(e); }}
-                      className="min-w-[200px] px-4 py-1.5 md:pb-2 text-sm rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                      className="min-w-[200px] px-4 py-1.5 md:pb-2 text-sm rounded-md bg-[#0662B7] text-white hover:bg-indigo-700"
                     >
                       View Applications
                     </button>
@@ -266,14 +267,14 @@ const RoomCard = ({
 
                 <input
                   type="text"
-                  className="flex-1 px-3 py-2 border rounded-md text-sm outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="flex-1 px-3 py-2 border rounded-md text-sm outline-none focus:ring-2 focus:[#0662B7]"
                   placeholder="Write your message to the room owner..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                 />
                 <button
                   onClick={handleConfirmApplication}
-                  className="flex items-center justify-center gap-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                  className="flex items-center justify-center gap-1 px-4 py-2 bg-[#0662B7] text-white rounded-md hover:bg-indigo-700"
                   title="Send Application"
                 >
                   <CiLocationArrow1 className="text-lg" />
@@ -304,8 +305,11 @@ const RoomCard = ({
 
       {/* Inline Room Details Below the Card */}
       {isExpanded && (
-        <div className="mt-4 border rounded-lg p-4 bg-gray-50 shadow-inner">
-          <RoomDetailsPage roomId={room.id} />
+        <div className="mt-4 border rounded-lg p-4 bg-gray-50 shadow-inner relative"> {/* Add relative positioning */}
+          <RoomDetailsPage 
+            roomId={room.id} 
+            onClose={onCloseDetails} // Pass the close handler
+          />
         </div>
       )}
     </div>

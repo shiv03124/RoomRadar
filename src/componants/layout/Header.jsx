@@ -57,7 +57,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
               <>
                 <button
                   onClick={handleAddRoomClick}
-                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#0662B7] text-white rounded-md text-sm font-medium hover:bg-indigo-600 transition-colors"
                 >
                   Add Room
                 </button>
@@ -66,7 +66,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             ) : (
               <button
                 onClick={() => navigate('/login')}
-                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-md text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#0662B7] text-white rounded-md text-xs sm:text-sm font-medium hover:bg-indigo-600 transition-colors"
               >
                 Login / Sign up
               </button>

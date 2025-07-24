@@ -21,7 +21,7 @@ const ForgotPasswordPage = () => {
     }
 
     try {
-      const response = await fetch('https://roomradarbackend.onrender.com/api/auth/send-otp', {
+      const response = await fetch('https://roomradarbackend-api.onrender.com/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

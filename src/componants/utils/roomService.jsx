@@ -1,7 +1,7 @@
 
 
 export const fetchAdminByEmail = async (email, token) => {
-  const response = await fetch(`https://roomradarbackend.onrender.com/api/admins/by-email?email=${email}`, {
+  const response = await fetch(`https://roomradarbackend-api.onrender.com/api/admins/by-email?email=${email}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -16,7 +16,7 @@ export const fetchAdminByEmail = async (email, token) => {
 
 export const updateRoomStatus = async (roomId, newStatus, adminId, token) => {
   const response = await fetch(
-    `https://roomradarbackend.onrender.com/api/rooms/admin/rooms/${roomId}/status?status=${newStatus}&adminId=${adminId}`,
+    `https://roomradarbackend-api.onrender.com/api/rooms/admin/rooms/${roomId}/status?status=${newStatus}&adminId=${adminId}`,
     {
       method: 'PUT',
       headers: {

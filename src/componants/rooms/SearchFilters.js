@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa';
 import { GiWashingMachine } from 'react-icons/gi';
 import { MdKitchen, MdElevator } from 'react-icons/md';
+import { FiX } from 'react-icons/fi';
 
 const SearchFilters = ({
   filters = {
@@ -30,6 +31,7 @@ const SearchFilters = ({
   onClose
 }) => {
   const [cities, setCities] = useState([]);
+  const [citySearchTerm, setCitySearchTerm] = useState('');
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -98,6 +100,17 @@ const SearchFilters = ({
     onFilterChange({ target: { name: 'amenities', value: newAmenities } });
   };
 
+  const handleCityChange = (e) => {
+    const { value } = e.target;
+    setCitySearchTerm(value);
+    onFilterChange({ target: { name: 'city', value } });
+  };
+
+  const clearCityInput = () => {
+    setCitySearchTerm('');
+    onFilterChange({ target: { name: 'city', value: '' } });
+  };
+
   return (
     <div className="relative bg-white p-4 rounded-lg shadow-md mb-6 border border-gray-200">
       {onClose && (
@@ -115,22 +128,38 @@ const SearchFilters = ({
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          {/* City Dropdown from API */}
+          {/* Updated City Input with Search */}
           <div>
             <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
-            <select
-              id="city"
-              name="city"
-              value={filters.city}
-              onChange={onFilterChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
-              disabled={activeTab !== 'All Listings'}
-            >
-              <option value="">Select City</option>
-              {cities.map((city, index) => (
-                <option key={index} value={city}>{city}</option>
-              ))}
-            </select>
+            <div className="relative mt-1">
+              <input
+                type="text"
+                id="city"
+                name="city"
+                value={filters.city}
+                onChange={handleCityChange}
+                list="cityOptions"
+                className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
+                placeholder="Type or select a city"
+                disabled={activeTab !== 'All Listings'}
+              />
+              <datalist id="cityOptions">
+                {cities
+                  .filter(city => city.toLowerCase().includes(citySearchTerm.toLowerCase()))
+                  .map((city, index) => (
+                    <option key={index} value={city}>{city}</option>
+                  ))}
+              </datalist>
+              {filters.city && (
+                <button
+                  type="button"
+                  onClick={clearCityInput}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  <FiX className="h-4 w-4 text-gray-400" />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Rent Slider */}
@@ -186,22 +215,8 @@ const SearchFilters = ({
           </div>
         </div>
 
-        {/* Area, Gender, Min/Max Rent */}
+        {/* Gender and Min/Max Rent */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          {/* <div>
-            <label htmlFor="area" className="block text-sm font-medium text-gray-700">Area/Locality</label>
-            <input
-              type="text"
-              id="area"
-              name="area"
-              value={filters.area}
-              onChange={onFilterChange}
-              placeholder="e.g. Shivaji Nagar"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm"
-              disabled={activeTab !== 'All Listings'}
-            />
-          </div> */}
-
           <div>
             <label htmlFor="preferredGender" className="block text-sm font-medium text-gray-700">Preferred Gender</label>
             <select
@@ -278,7 +293,7 @@ const SearchFilters = ({
           <button
             type="submit"
             disabled={isLoading}
-            className={`inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
+            className={`inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#0662B7] hover:bg-blue-700 ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
           >
             {isLoading ? (
               <>

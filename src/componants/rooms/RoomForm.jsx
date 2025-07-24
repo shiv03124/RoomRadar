@@ -17,6 +17,7 @@ const RoomForm = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const [cities, setCities] = useState([]);
+  const [citySearchTerm, setCitySearchTerm] = useState('');
   const [errors, setErrors] = useState({
     rent: false,
     securityDeposit: false
@@ -24,20 +25,30 @@ const RoomForm = ({
 
   useEffect(() => {
   const fetchCities = async () => {
-    const res = await fetch("https://countriesnow.space/api/v0.1/countries/cities", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ country: "India" })
-    });
+    try {
+      const res = await fetch("https://countriesnow.space/api/v0.1/countries/cities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ country: "India" })
+      });
 
-    const data = await res.json();
-    if (data.data) {
-      setCities(data.data.sort());
+      const result = await res.json();
+
+      // Ensure the response has the expected data
+      if (result && result.data && Array.isArray(result.data)) {
+        setCities(result.data.sort());
+      } else {
+        console.error("Unexpected response format:", result);
+        setCities([]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch cities:", error);
     }
   };
 
   fetchCities();
 }, []);
+
 
 
   const availableAmenities = [
@@ -187,24 +198,61 @@ const RoomForm = ({
 
 
        <div className="sm:col-span-3">
-          <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-            City<span className="text-red-500">*</span>
-          </label>
-          <select
-  name="city"
-  id="city"
-  value={room.city}
-  onChange={handleInputChange}
-  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-  required
->
-  <option value="">Select City</option>
-  {cities.map((city, index) => (
-    <option key={index} value={city}>{city}</option>
-  ))}
-</select>
-
-        </div> 
+  <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+    City<span className="text-red-500">*</span>
+  </label>
+  <div className="relative">
+    <input
+      type="text"
+      name="city"
+      id="city"
+      value={room.city}
+      onChange={(e) => {
+        handleInputChange(e);
+        setCitySearchTerm(e.target.value);
+      }}
+      className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+      required
+      placeholder="Type or select a city"
+      list="cityOptions"
+    />
+    <datalist id="cityOptions">
+      {cities
+        .filter(city => 
+          city.toLowerCase().includes(citySearchTerm.toLowerCase())
+        )
+        .map((city, index) => (
+          <option key={`city-${index}`} value={city}>
+            {city}
+          </option>
+        ))}
+    </datalist>
+    {room.city && (
+      <button
+        type="button"
+        onClick={() => {
+          setRoom(prev => ({ ...prev, city: '' }));
+          setCitySearchTerm('');
+        }}
+        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+      >
+        <svg
+          className="h-5 w-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    )}
+  </div>
+</div>
         
         <div className="sm:col-span-3">
           <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">
@@ -267,18 +315,24 @@ const RoomForm = ({
     <label htmlFor="totalNoOfPeoples" className="block text-sm font-medium text-gray-700 mb-1">
       Total No. of People<span className="text-red-500">*</span>
     </label>
-    <input
-      type="number"
+    <select
       name="totalNoOfPeoples"
       id="totalNoOfPeoples"
       value={room.totalNoOfPeoples}
       onChange={handleInputChange}
-      min="1"
       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
       required
-    />
+    >
+      <option value="">Select number</option>
+      {[...Array(10)].map((_, i) => (
+        <option key={i + 1} value={i + 1}>
+          {i + 1}
+        </option>
+      ))}
+    </select>
   </div>
 )}
+
 
         {/* Vacancies and Furnished */}
         <div className="sm:col-span-3">

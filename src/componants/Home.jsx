@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaSearch, FaHome, FaHeart, FaUser, FaStar, FaArrowRight, FaMapMarkerAlt, FaMoneyBillWave, FaRulerCombined } from 'react-icons/fa';
 import { IoIosPeople } from 'react-icons/io';
-import logo from './images/image.png'
+import logo from './images/logoimage.png'
 import { GiHouseKeys } from 'react-icons/gi';
 
 const Home = () => {
@@ -66,9 +66,10 @@ const Home = () => {
             onClick={() => window.scrollTo(0, 0)}
           >
            <img
-  src={logo} // Replace with your actual logo path
+  src={logo} 
+  // Replace with your actual logo path
   alt="RoomRadar Logo"
-  className="h-10 w-auto object-contain"
+  className="h-10 w-auto object-contain scale-125"
 />
 
           </motion.div>
@@ -99,7 +100,7 @@ const Home = () => {
             whileHover={{ scale: 1.05, backgroundColor: '#4338ca' }}
             whileTap={{ scale: 0.95 }}
             onClick={handleSearch}
-            className="bg-indigo-600 text-white px-6 py-2 rounded-full font-medium shadow-md"
+            className="bg-[#0662B7] text-white px-6 py-2 rounded-full font-medium shadow-md"
           >
             Get Started
           </motion.button>
@@ -147,7 +148,7 @@ const Home = () => {
                 >
                   <button 
                     onClick={handleSearch}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-full shadow-lg flex items-center justify-center w-full sm:w-auto"
+                    className="bg-[#0662B7] hover:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-full shadow-lg flex items-center justify-center w-full sm:w-auto"
                   >
                     <FaSearch className="mr-3" /> Start Searching
                   </button>
@@ -298,7 +299,7 @@ const Home = () => {
                 color: "green"
               },
               {
-                icon: <FaMapMarkerAlt className="text-3xl text-blue-600" />,
+                icon: <FaMapMarkerAlt className="text-3xl bg-[#0662B7]" />,
                 title: "Neighborhood Insights",
                 description: "Get detailed information about the area before you commit.",
                 color: "blue"
@@ -401,7 +402,7 @@ const Home = () => {
           >
             <button 
               onClick={handleSearch}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-full shadow-lg inline-flex items-center"
+              className="bg-[#0662B7] hover:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-full shadow-lg inline-flex items-center"
             >
               Get Started Now <FaArrowRight className="ml-2" />
             </button>
@@ -416,7 +417,7 @@ const Home = () => {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="py-20 px-4 bg-indigo-600 text-white"
+        className="py-20 px-4 bg-[#0662B7] text-white"
       >
         <div className="max-w-7xl mx-auto">
           <motion.h2 
@@ -529,7 +530,7 @@ const Home = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             <div>
               <div className="flex items-center mb-6">
-                <div className="bg-indigo-600 w-8 h-8 rounded-md flex items-center justify-center mr-2">
+                <div className="bg-[#0662B7] w-8 h-8 rounded-md flex items-center justify-center mr-2">
                   <GiHouseKeys className="text-white text-lg" />
                 </div>
                 <span className="text-xl font-bold text-white">RoomRadar</span>
