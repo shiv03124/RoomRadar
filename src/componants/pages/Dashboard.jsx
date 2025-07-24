@@ -70,7 +70,7 @@ const Dashboard = () => {
   try {
     setLoading(true);
     if (!token) {
-      const data = await fetchRooms('https://roomradarbackend-api.onrender.com/api/rooms/', null);
+      const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
       setRooms(data);
       setUserData(null);
     } else {
@@ -78,7 +78,7 @@ const Dashboard = () => {
       if (!user?.id) throw new Error('User ID not available');
       sessionStorage.setItem('userId', user.id);
       setUserData(user);
-      const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/not-applied/${user.id}`, token);
+      const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${user.id}`, token);
       setRooms(data);
     }
   } catch (err) {
@@ -97,7 +97,7 @@ const Dashboard = () => {
       try {
         setLoading(true);
         if (!token) {
-          const data = await fetchRooms('https://roomradarbackend-api.onrender.com/api/rooms/', null);
+          const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
           setRooms(data);
           setUserData(null);
         } else {
@@ -105,7 +105,7 @@ const Dashboard = () => {
           if (!user?.id) throw new Error('User ID not available');
           sessionStorage.setItem('userId', user.id);
           setUserData(user);
-          const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/not-applied/${user.id}`, token);
+          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${user.id}`, token);
           setRooms(data);
         }
       } catch (err) {
@@ -128,17 +128,17 @@ const Dashboard = () => {
       try {
         setLoading(true);
         if (activeTab === 'My Listings') {
-          const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/user/${userData.id}`, token);
+          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/user/${userData.id}`, token);
           setRooms(data);
         } else if (activeTab === 'Applied Rooms') {
-          const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/applied/${userData.id}`, token);
+          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/applied/${userData.id}`, token);
           setAppliedRooms(data);
         } else {
           if (!token) {
-            const data = await fetchRooms('https://roomradarbackend-api.onrender.com/api/rooms/', null);
+            const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
             setRooms(data);
           } else {
-            const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/not-applied/${userData.id}`, token);
+            const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${userData.id}`, token);
             setRooms(data);
           }
         }
@@ -185,7 +185,7 @@ const Dashboard = () => {
       if (userId && !isNaN(userId)) params.append('userId', userId);
       filters.amenities.forEach(a => params.append('amenities', a));
 
-      const data = await fetchRooms(`https://roomradarbackend-api.onrender.com/api/rooms/search?${params.toString()}`);
+      const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/search?${params.toString()}`);
       setRooms(data);
       setIsSearching(false);
     } catch (err) {

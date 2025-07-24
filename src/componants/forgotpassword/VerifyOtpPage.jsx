@@ -14,7 +14,7 @@ const VerifyOtpPage = () => {
   }, [email, navigate]);
 
   const handleVerify = async () => {
-    const response = await fetch('https://roomradarbackend-api.onrender.com/api/auth/verify-otp', {
+    const response = await fetch('https://roomradarbackend.onrender.com/api/auth/verify-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp })

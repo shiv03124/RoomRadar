@@ -20,8 +20,8 @@ const Login = () => {
 
   try {
     const loginUrl = isAdminLogin
-      ? 'https://roomradarbackend-api.onrender.com/auth/login/admin'
-      : 'https://roomradarbackend-api.onrender.com/auth/login';
+      ? 'https://roomradarbackend.onrender.com/auth/login/admin'
+      : 'https://roomradarbackend.onrender.com/auth/login';
 
     const response = await fetch(loginUrl, {
       method: 'POST',

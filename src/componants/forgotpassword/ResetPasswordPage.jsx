@@ -14,7 +14,7 @@ const ResetPasswordPage = () => {
       return;
     }
 
-    const response = await fetch('https://roomradarbackend-api.onrender.com/api/auth/reset-password', {
+    const response = await fetch('https://roomradarbackend.onrender.com/api/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, newPassword: password })

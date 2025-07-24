@@ -111,7 +111,7 @@ const RoomCard = ({
       }
 
       const response = await fetch(
-        `'https://roomradarbackend-api.onrender.com/api/applications/status?userId=${userId}&roomId=${room.id}`,
+        `'https://roomradarbackend.onrender.com/api/applications/status?userId=${userId}&roomId=${room.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

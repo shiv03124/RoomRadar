@@ -80,7 +80,7 @@ const Signup = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`https://roomradarbackend-api.onrender.com/api/otp/send?email=${encodeURIComponent(email)}`, {
+      const res = await fetch(`https://roomradarbackend.onrender.com/api/otp/send?email=${encodeURIComponent(email)}`, {
         method: 'POST',
       });
       if (!res.ok) throw new Error('Failed to send OTP');
@@ -99,7 +99,7 @@ const Signup = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`https://roomradarbackend-api.onrender.com/api/otp/verify?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
+      const res = await fetch(`https://roomradarbackend.onrender.com/api/otp/verify?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -125,14 +125,14 @@ const Signup = () => {
     setError('');
 
     try {
-      const emailRes = await fetch(`https://roomradarbackend-api.onrender.com/api/users/check-email?email=${encodeURIComponent(email)}`);
+      const emailRes = await fetch(`https://roomradarbackend.onrender.com/api/users/check-email?email=${encodeURIComponent(email)}`);
       if ((await emailRes.text()) === 'exists') {
         toast.custom((t) => <ErrorToast message="Email is already registered" t={t} />);
         return;
       }
 
       if (formData.phone) {
-        const phoneRes = await fetch(`https://roomradarbackend-api.onrender.com/api/users/check-phone?phone=${encodeURIComponent(formData.phone)}`);
+        const phoneRes = await fetch(`https://roomradarbackend.onrender.com/api/users/check-phone?phone=${encodeURIComponent(formData.phone)}`);
         if ((await phoneRes.text()) === 'exists') {
           toast.custom((t) => <ErrorToast message="Phone number is already registered" t={t} />);
           return;
@@ -152,7 +152,7 @@ const Signup = () => {
         formPayload.append('image', profileImage);
       }
 
-      const res = await fetch('https://roomradarbackend-api.onrender.com/api/users/saveUser', {
+      const res = await fetch('https://roomradarbackend.onrender.com/api/users/saveUser', {
         method: 'POST',
         body: formPayload,
       });

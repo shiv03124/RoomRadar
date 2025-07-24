@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_BASE_URL = 'https://roomradarbackend-api.onrender.com/api/users';
+const API_BASE_URL = 'https://roomradarbackend.onrender.com/api/users';
 
 const getAuthHeaders = () => {
   const token = sessionStorage.getItem('token');
@@ -19,7 +19,7 @@ export const fetchUserProfile = async (navigate) => {
   }
 
   try {
-    const response = await fetch(`https://roomradarbackend-api.onrender.com/api/users/email/${email}`, {
+    const response = await fetch(`https://roomradarbackend.onrender.com/api/users/email/${email}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -68,7 +68,7 @@ export const fetchApplications = async (userId) => {
       throw new Error('Could not retrieve user information');
     }
 
-    const response = await fetch(`https://roomradarbackend-api.onrender.com/api/applications/user/${userId}`, {
+    const response = await fetch(`https://roomradarbackend.onrender.com/api/applications/user/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -93,7 +93,7 @@ export const fetchRoomApplications = async (id) => {
     }
 
     // First fetch the room details
-    const roomResponse = await fetch(`https://roomradarbackend-api.onrender.com/api/rooms/getRoom/${id}`, {
+    const roomResponse = await fetch(`https://roomradarbackend.onrender.com/api/rooms/getRoom/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -105,7 +105,7 @@ export const fetchRoomApplications = async (id) => {
     }
     
     // Then fetch applications for the room
-    const appsResponse = await fetch(`https://roomradarbackend-api.onrender.com/api/applications/room/${id}`, {
+    const appsResponse = await fetch(`https://roomradarbackend.onrender.com/api/applications/room/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -127,7 +127,7 @@ export const fetchRoomApplications = async (id) => {
         }
 
         try {
-          const userResponse = await fetch(`https://roomradarbackend-api.onrender.com/api/users/${app.applicantId}`, {
+          const userResponse = await fetch(`https://roomradarbackend.onrender.com/api/users/${app.applicantId}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -163,7 +163,7 @@ export const handleApplicationAction = async (applicationId, action) => {
 
     // For APPROVE/REJECT actions
     if (action === 'ACCEPTED' || action === 'REJECTED') {
-      const response = await fetch(`https://roomradarbackend-api.onrender.com/api/applications/${applicationId}/status?status=${action}`, {
+      const response = await fetch(`https://roomradarbackend.onrender.com/api/applications/${applicationId}/status?status=${action}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ export const handleApplicationAction = async (applicationId, action) => {
     } 
     // For DELETE action
     else if (action === 'DELETE') {
-      const response = await fetch(`https://roomradarbackend-api.onrender.com/api/applications/${applicationId}`, {
+      const response = await fetch(`https://roomradarbackend.onrender.com/api/applications/${applicationId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -202,7 +202,7 @@ export const deleteRoom = async (roomId) => {
     throw new Error('Session expired. Please login again.');
   }
 
-  const response = await fetch(`https://roomradarbackend-api.onrender.com/api/rooms/delete/${roomId}`, {
+  const response = await fetch(`https://roomradarbackend.onrender.com/api/rooms/delete/${roomId}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -253,7 +253,7 @@ export const addRoom = async (newRoom, userId) => {
     formData.append('images', image);
   });
 
-  const response = await fetch(`https://roomradarbackend-api.onrender.com/api/rooms/add/${userId}`, {
+  const response = await fetch(`https://roomradarbackend.onrender.com/api/rooms/add/${userId}`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -307,7 +307,7 @@ export const updateRoom = async (room, roomId) => {
     }
   });
 
-  const response = await fetch(`https://roomradarbackend-api.onrender.com/api/rooms/update-with-images/${roomId}`, {
+  const response = await fetch(`https://roomradarbackend.onrender.com/api/rooms/update-with-images/${roomId}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -339,7 +339,7 @@ export const handleApply = async (roomId, message) => {
     }
 
     const checkResponse = await fetch(
-      `https://roomradarbackend-api.onrender.com/api/applications/check?userId=${user.id}&roomId=${roomId}`,
+      `https://roomradarbackend.onrender.com/api/applications/check?userId=${user.id}&roomId=${roomId}`,
       { headers: { 'Authorization': `Bearer ${token}` } }
     );
 
@@ -351,7 +351,7 @@ export const handleApply = async (roomId, message) => {
       }
     }
 
-    const response = await fetch('https://roomradarbackend-api.onrender.com/api/applications', {
+    const response = await fetch('https://roomradarbackend.onrender.com/api/applications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -390,7 +390,7 @@ export const updateUserProfile = async (user, userId, imageFile = null) => {
     formData.append('image', imageFile);
   }
 
-  const response = await fetch(`https://roomradarbackend-api.onrender.com/api/users/${userId}`, {
+  const response = await fetch(`https://roomradarbackend.onrender.com/api/users/${userId}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -406,7 +406,7 @@ export const updateUserProfile = async (user, userId, imageFile = null) => {
 export const fetchUserApplications = async (userId) => {
   const token = sessionStorage.getItem('token');
   
-  const response = await fetch(`https://roomradarbackend-api.onrender.com/api/applications/user/${userId}`, {
+  const response = await fetch(`https://roomradarbackend.onrender.com/api/applications/user/${userId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -424,7 +424,7 @@ export const fetchUserApplications = async (userId) => {
 export const fetchroomswithuserid = async (userId) => {
   
   try {
-    const response = await fetch(`https://roomradarbackend-api.onrender.com/api/applications/user/${userId}`, {
+    const response = await fetch(`https://roomradarbackend.onrender.com/api/applications/user/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -491,7 +491,7 @@ export const formatLocalDateTime = (dateTimeString) => {
 export const getRoomById = async (roomId) => {
   try {
     const token = sessionStorage.getItem("token");
-    const response = await fetch(`https://roomradarbackend-api.onrender.com/api/rooms/getRoom/${roomId}`, {
+    const response = await fetch(`https://roomradarbackend.onrender.com/api/rooms/getRoom/${roomId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
