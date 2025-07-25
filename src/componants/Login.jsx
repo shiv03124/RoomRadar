@@ -1,75 +1,75 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import image from '../componants/images/background.jpg'
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import image from '../componants/images/background.jpg';
 import { fetchUserProfile } from './utils/fetchUserProfile'; 
 
 const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError('');
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
-  try {
-    const loginUrl = isAdminLogin
-      ? 'https://roomradarbackend.onrender.com/auth/login/admin'
-      : 'https://roomradarbackend.onrender.com/auth/login';
+    try {
+      const loginUrl = isAdminLogin
+        ? 'https://roomradarbackend.onrender.com/auth/login/admin'
+        : 'https://roomradarbackend.onrender.com/auth/login';
 
-    const response = await fetch(loginUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Login failed. Please check your credentials.');
+      if (!response.ok) {
+        throw new Error('Login failed. Please check your credentials.');
+      }
+
+      const data = await response.json();
+
+      if (!data.token) {
+        throw new Error('No token received from server.');
+      }
+
+      // Store token, email, role
+      login(data.token, email);
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('email', email);
+      sessionStorage.setItem('role', isAdminLogin ? 'admin' : 'user');
+
+      if (isAdminLogin) {
+        sessionStorage.setItem('authToken', data.token);
+        sessionStorage.setItem('adminEmail', email);
+      } else {
+        const profile = await fetchUserProfile(navigate);
+        if (profile && profile.id) {
+          sessionStorage.setItem('userId', profile.id);
+        }
+      }
+
+      // Navigate after profile fetch
+      navigate(isAdminLogin ? '/admindashboard' : '/dashboard');
+
+    } catch (err) {
+      setError(err.message || 'An error occurred during login');
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    const data = await response.json();
-
-    if (!data.token) {
-      throw new Error('No token received from server.');
-    }
-
-    // Store token, email, role
-    login(data.token, email);
-    sessionStorage.setItem('token', data.token);
-    sessionStorage.setItem('email', email);
-    sessionStorage.setItem('role', isAdminLogin ? 'admin' : 'user');
-
-    if (isAdminLogin) {
-      sessionStorage.setItem('authToken', data.token);
-      sessionStorage.setItem('adminEmail', email);
-    }
-
-    // ⬇️ Fetch user profile and store userId
-  if (isAdminLogin) {
-  sessionStorage.setItem('authToken', data.token);
-  sessionStorage.setItem('adminEmail', email);
-} else {
-  const profile = await fetchUserProfile(navigate);
-  if (profile && profile.id) {
-    sessionStorage.setItem('userId', profile.id);
-  }
-}
-
-    // ⬇️ Navigate after profile fetch
-    navigate(isAdminLogin ? '/admindashboard' : '/dashboard');
-
-  } catch (err) {
-    setError(err.message || 'An error occurred during login');
-  } finally {
-    setIsLoading(false);
-  }
-};
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat" 
@@ -131,15 +131,24 @@ const Login = () => {
                     Forgot password?
                   </Link>
                 </div>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  className="w-full px-4 py-3 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    className="w-full px-4 py-3 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all pr-10"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center">
