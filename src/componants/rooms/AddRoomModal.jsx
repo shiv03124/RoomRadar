@@ -55,25 +55,43 @@ const AddRoomModal = ({ onClose, onRoomAdded, userData }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   const toastId = toast.loading('Adding room...', toastOptions.loading);
 
   try {
-    if (!newRoom.title || !newRoom.rent || !newRoom.area || !newRoom.accommodationType) {
+    // Validate required fields
+    if (
+      !newRoom.title ||
+      !newRoom.rent ||
+      !newRoom.area ||
+      !newRoom.accommodationType ||
+      !newRoom.address ||
+      !newRoom.city ||
+      !newRoom.availableFrom ||
+      !newRoom.furnished ||
+      !newRoom.preferredGender ||
+      !newRoom.noofvacancies
+    ) {
       throw new Error('Please fill all required fields');
     }
 
-    if (newRoom.accommodationType === 'Flat' && !newRoom.configuration) {
-      throw new Error('Please specify the configuration for a Flat (e.g., 1BHK, 2BHK)');
+    if (newRoom.accommodationType === 'Flat') {
+      if (!newRoom.configuration || !newRoom.totalNoOfPeoples) {
+        throw new Error('Please specify configuration and total number of people for a Flat');
+      }
     }
- 
+
+    // Image validation
     if (!newRoom.images || newRoom.images.length === 0) {
-  setImageError('At least one image is required');
-  return; // or throw error
-}
+      setImageError(true);  // triggers validation message
+      toast.dismiss(toastId);
+      toast.error("At least one image is required", { id: toastId });
+      return;
+    } else {
+      setImageError(false); // reset if valid
+    }
 
     const userId = userData?.id || sessionStorage.getItem('userId');
     if (!userId) {
@@ -106,6 +124,7 @@ const AddRoomModal = ({ onClose, onRoomAdded, userData }) => {
     });
   }
 };
+
 
 
   return (

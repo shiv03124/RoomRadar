@@ -68,7 +68,6 @@ const RoomCard = ({
         throw new Error('Application failed');
       }
     } catch (error) {
-      toast.dismiss(toastId);
       toast.custom((t) => <ErrorToast message="Failed to submit application. Please try again." t={t} />, {
         id: toastId,
         duration: 4000,
@@ -94,6 +93,7 @@ const RoomCard = ({
         toast.error(<ErrorToast message="Failed to fetch user profile." />, {
           id: toastId,
           ...toastOptions.error,
+          style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
         });
         return;
       }
@@ -106,12 +106,13 @@ const RoomCard = ({
         toast.error(<ErrorToast message="User not logged in or token missing." />, {
           id: toastId,
           ...toastOptions.error,
+          style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
         });
         return;
       }
 
       const response = await fetch(
-        `'https://roomradarbackend.onrender.com/api/applications/status?userId=${userId}&roomId=${room.id}`,
+        `https://roomradarbackend.onrender.com/api/applications/status?userId=${userId}&roomId=${room.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -130,31 +131,26 @@ const RoomCard = ({
           id: toastId,
           icon: null,
           ...toastOptions.success,
+          style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
         });
         setShowModal(true);
       } else {
         toast.dismiss(toastId);
         toast.error(
-          (t) => (
-            <div className="toast-message flex items-center justify-between w-full">
-              <div className="flex items-center space-x-2">
-                <span>You can only view owner details after your application is accepted.</span>
-              </div>
-              <CloseButton onClose={() => toast.dismiss(t.id)} />
-            </div>
-          ),
+          <ErrorToast message="You can only view owner details after your application is accepted." />,
           {
             id: toastId,
             ...toastOptions.error,
             duration: 4000,
+            style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
           }
         );
       }
     } catch (error) {
-      console.error(error);
       toast.error(<ErrorToast message="Error fetching application status." />, {
         id: toastId,
         ...toastOptions.error,
+        style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
       });
     }
   };
@@ -192,8 +188,9 @@ const RoomCard = ({
             )}
           </div>
 
-          <div className="mt-3">
-            <div className="grid grid-cols-3 gap-2 text-sm">
+         <div className="mt-3">
+  <div className="grid grid-cols-4 gap-4 text-sm">
+
               <div>
                 <p className="text-gray-400">Rent</p>
                 <p className="font-medium text-gray-900">₹{room.rent || 'N/A'}</p>
@@ -205,6 +202,10 @@ const RoomCard = ({
               <div>
                 <p className="text-gray-400">Vacancies</p>
                 <p className="font-medium text-gray-900">{room.noofvacancies || 0}</p>
+              </div>
+               <div>
+                <p className="text-gray-400">Total person</p>
+                <p className="font-medium text-gray-900">{room.totalNoOfPeoples || 0}</p>
               </div>
             </div>
 

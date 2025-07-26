@@ -45,24 +45,26 @@ export const LoadingToast = ({ message, t }) => (
     {t && <CloseButton onClose={() => toast.dismiss(t.id)} />}
   </div>
 );
-
 export const SuccessToast = ({ message, t }) => (
-  <div className="toast-message w-full sm:w-[20%] bg-green-100 p-4 rounded-lg flex items-center justify-between shadow-lg">
-    <div className="flex items-center space-x-2">
+  <div className="toast-message w-full max-w-sm sm:max-w-xs bg-green-100 px-4 py-3 rounded-lg flex items-start sm:items-center justify-between shadow-lg gap-3">
+    <div className="flex items-start sm:items-center gap-2 w-full">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6 text-green-700"
+        className="h-6 w-6 min-w-[1.5rem] text-green-700 mt-1 sm:mt-0"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
       >
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
       </svg>
-      <span className="text-sm text-green-900 font-medium">{message}</span>
+      <span className="text-sm text-green-900 font-medium break-words">
+        {message}
+      </span>
     </div>
     {t && <CloseButton onClose={() => toast.dismiss(t.id)} />}
   </div>
 );
+
 
 export const WaitingToast = ({ message = "Please wait...", t }) => (
   <div className="toast-message bg-yellow-100 text-yellow-800 flex items-center justify-between w-full sm:w-[20%] p-4 rounded-lg shadow-md">

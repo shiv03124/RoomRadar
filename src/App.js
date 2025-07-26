@@ -16,6 +16,7 @@ import AboutUs from './componants/pages/AboutUs';
 import ForgotPasswordPage from './componants/forgotpassword/ForgotPasswordPage';
 import VerifyOtpPage from './componants/forgotpassword/VerifyOtpPage';
 import ResetPasswordPage from './componants/forgotpassword/ResetPasswordPage';
+import ListingsPage from './componants/rooms/ListingsPage';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const role = sessionStorage.getItem("role");
@@ -115,6 +116,11 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/room/:roomId" element={<RoomDetailsPage />} />
+         <Route path="/listings/:type" element={
+    <ProtectedRoute allowedRoles={["user"]}>
+      <ListingsPage />
+    </ProtectedRoute>
+  } />
       </Routes>
 
       {/* {shouldShowHeader && <Footer />} */}

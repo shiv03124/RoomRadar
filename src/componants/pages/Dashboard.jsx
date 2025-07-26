@@ -1,445 +1,162 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiFilter, FiMenu, FiX } from 'react-icons/fi';
+import React, { useEffect, useState } from 'react';
+import { useRef } from 'react';
+
 import RoomCard from '../rooms/RoomCard';
-import AddRoomModal from '../rooms/AddRoomModal';
-import ApplicationsModal from '../applications/ApplicationsModal';
-import EditRoomModal from '../rooms/EditRoomModal';
-import { fetchUserProfile, fetchRooms } from '../utils/fetchUserProfile';
-import SearchFilters from '../rooms/SearchFilters';
-import RoomDetailsPage from '../rooms/RoomDetailsPage';
 import { Skeleton } from '../ui/Skeleton';
 import { NoRoomsPlaceholder } from '../ui/NoRoomsPlaceholder';
+import RoomDetailsPage from '../rooms/RoomDetailsPage';
+import { AnimatePresence, motion } from 'framer-motion';
+import { fetchRooms } from '../utils/fetchUserProfile';
 
-const defaultFilters = {
-  city: '',
-  area: '',
-  minVacancies: 1,
-  maxVacancies: 5,
-  minRent: 0,
-  maxRent: 10000,
-  preferredGender: '',
-  amenities: []
-};
+const accommodationTypes = ['Flat','PG',  'Hostel'];
+const genders = ['All', 'Male', 'Female', 'Other'];
 
 const Dashboard = () => {
-  const [showRoomDetails, setShowRoomDetails] = useState(false);
-  const [showApplicationsModal, setShowApplicationsModal] = useState(false);
-  const [showEditRoomModal, setShowEditRoomModal] = useState(false);
-  const [showAddRoomModal, setShowAddRoomModal] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const [editingRoom, setEditingRoom] = useState(null);
   const [rooms, setRooms] = useState([]);
-  const [appliedRooms, setAppliedRooms] = useState([]);
-  const [roomApplications, setRoomApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [selectedAccommodation, setSelectedAccommodation] = useState('Flat');
+  const [selectedGender, setSelectedGender] = useState('All');
+  const [selectedRoom, setSelectedRoom] = useState(null);
+const gridRef = useRef(null);
 
-  const [activeTab, setActiveTab] = useState('All Listings');
-  const [filters, setFilters] = useState(defaultFilters);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [expandedRoomId, setExpandedRoomId] = useState(null);
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const fetchApprovedRooms = async () => {
+  setLoading(true);
+  try {
+    const userId = sessionStorage.getItem('userId');
+    let url = `https://roomradarbackend.onrender.com/api/rooms/approved?accommodationType=${selectedAccommodation}`;
+
+    // Add userId only if user is logged in
+    if (userId) {
+      url += `&userId=${userId}`;
+    }
+
+    const data = await fetchRooms(url);
+    setRooms(data);
+  } catch (error) {
+    console.error('Error fetching approved rooms:', error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchApprovedRooms();
+}, [selectedAccommodation]);
+
+
+
+  const filteredRooms = rooms.filter((room) =>
+    selectedGender === 'All' ? true : room.preferredGender === selectedGender
+  );
 
   const renderSkeletonCards = () => {
-    
     const skeletonArray = new Array(4).fill(null);
     return (
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         {skeletonArray.map((_, index) => (
-          <div key={index} className="w-full">
-            <div className="p-4 border rounded-md shadow bg-white">
-              <Skeleton className="h-48 w-full mb-4" />
-              <Skeleton className="h-5 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-1/2 mb-2" />
-              <Skeleton className="h-4 w-2/3 mb-2" />
-              <div className="flex gap-2 mt-3">
-                <Skeleton className="h-8 w-20" />
-                <Skeleton className="h-8 w-20" />
-              </div>
+          <div key={index} className="p-4 border rounded-md shadow bg-white">
+            <Skeleton className="h-48 w-full mb-4" />
+            <Skeleton className="h-5 w-3/4 mb-2" />
+            <Skeleton className="h-4 w-1/2 mb-2" />
+            <Skeleton className="h-4 w-2/3 mb-2" />
+            <div className="flex gap-2 mt-3">
+              <Skeleton className="h-8 w-20" />
+              <Skeleton className="h-8 w-20" />
             </div>
           </div>
         ))}
       </div>
     );
   };
-  const loadDefaultRooms = async () => {
-  const token = sessionStorage.getItem('token');
-  try {
-    setLoading(true);
-    if (!token) {
-      const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
-      setRooms(data);
-      setUserData(null);
-    } else {
-      const user = await fetchUserProfile();
-      if (!user?.id) throw new Error('User ID not available');
-      sessionStorage.setItem('userId', user.id);
-      setUserData(user);
-      const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${user.id}`, token);
-      setRooms(data);
-    }
-  } catch (err) {
-    setError(err.message);
-    sessionStorage.clear();
-    setUserData(null);
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-  useEffect(() => {
-    const loadDefaultRooms = async () => {
-      const token = sessionStorage.getItem('token');
-      try {
-        setLoading(true);
-        if (!token) {
-          const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
-          setRooms(data);
-          setUserData(null);
-        } else {
-          const user = await fetchUserProfile();
-          if (!user?.id) throw new Error('User ID not available');
-          sessionStorage.setItem('userId', user.id);
-          setUserData(user);
-          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${user.id}`, token);
-          setRooms(data);
-        }
-      } catch (err) {
-        setError(err.message);
-        sessionStorage.clear();
-        setUserData(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadDefaultRooms();
-  }, []);
-
-  useEffect(() => {
-    const fetchTabData = async () => {
-      const token = sessionStorage.getItem('token');
-      if (activeTab !== 'All Listings' && !userData?.id) return;
-
-      try {
-        setLoading(true);
-        if (activeTab === 'My Listings') {
-          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/user/${userData.id}`, token);
-          setRooms(data);
-        } else if (activeTab === 'Applied Rooms') {
-          const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/applied/${userData.id}`, token);
-          setAppliedRooms(data);
-        } else {
-          if (!token) {
-            const data = await fetchRooms('https://roomradarbackend.onrender.com/api/rooms/', null);
-            setRooms(data);
-          } else {
-            const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/not-applied/${userData.id}`, token);
-            setRooms(data);
-          }
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTabData();
-  }, [activeTab, userData]);
-
-  const handleViewDetails = (room) => {
-    setSelectedRoom(room);
-  };
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    const numericFields = ['minRent', 'maxRent', 'minVacancies', 'maxVacancies'];
-    const newValue = numericFields.includes(name) ? Number(value) : value;
-    setFilters(prev => ({ ...prev, [name]: newValue }));
-  };
-
-  const handleResetFilters = () => {
-    setFilters(defaultFilters);
-  };
-
-  const handleSearchSubmit = async () => {
-    if (activeTab !== 'All Listings') return;
-
-    const userId = sessionStorage.getItem('userId');
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-
-      if (filters.city) params.append('city', filters.city);
-      if (filters.area) params.append('area', filters.area);
-      if (filters.minVacancies !== undefined) params.append('minVacancies', filters.minVacancies.toString());
-      if (filters.maxVacancies !== undefined) params.append('maxVacancies', filters.maxVacancies.toString());
-      if (filters.minRent !== undefined) params.append('minRent', filters.minRent.toString());
-      if (filters.maxRent !== undefined) params.append('maxRent', filters.maxRent.toString());
-      if (filters.preferredGender) params.append('preferredGender', filters.preferredGender);
-      if (userId && !isNaN(userId)) params.append('userId', userId);
-      filters.amenities.forEach(a => params.append('amenities', a));
-
-      const data = await fetchRooms(`https://roomradarbackend.onrender.com/api/rooms/search?${params.toString()}`);
-      setRooms(data);
-      setIsSearching(false);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFetchApplications = (applications) => {
-    setRoomApplications(applications);
-    setShowApplicationsModal(true);
-  };
-
-  const handleToggleDetails = (roomId) => {
-  setExpandedRoomId(prevId => (prevId === roomId ? null : roomId));
-};
-  useEffect(() => {
-    if (mobileFilterOpen) setShowFilters(false);
-  }, [mobileFilterOpen]);
+window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 overflow-x-hidden" style={{ height: '80vh', overflowY: 'auto' }}>
-      {/* Tabs */}
-      <div className="w-full mt-5 pb-2">
-        {/* Mobile View */}
-        <div className="sm:hidden">
-          <div className="flex flex-col items-start gap-2">
-            {/* All Listings with Hamburger */}
-            <div className="flex items-center justify-between w-full">
-             <button
-  onClick={() => {
-    if (activeTab === 'All Listings') {
-      // Refresh data
-      loadDefaultRooms();
-    } else {
-      setActiveTab('All Listings');
-    }
-  }}
-  className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
-    activeTab === 'All Listings'
-      ? 'bg-[#0662B7] text-white shadow-md'
-      : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-  }`}
->
-  All Listings
-</button>
+    <div className="max-w-7xl mx-auto px-4 mt-6 h-[calc(100vh-5rem)] overflow-y-auto pb-20">
 
-              <button
-                onClick={() => setMobileFilterOpen(prev => !prev)}
-                className="p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-              >
-                {mobileFilterOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-              </button>
-            </div>
 
-            {sessionStorage.getItem('token') && (
-              <button
-                onClick={() => setActiveTab('My Listings')}
-                className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
-                  activeTab === 'My Listings'
-                    ? 'bg-[#0662B7] text-white shadow-md'
-                    : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                My Listings
-              </button>
-            )}
+      {/* Tabs + Search */}
+<div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+  {/* Accommodation Tabs */}
+  <div className="flex gap-2 overflow-x-auto pb-2 w-full sm:w-auto">
+    {accommodationTypes.map((type) => (
+      <button
+        key={type}
+        onClick={() => setSelectedAccommodation(type)}
+        className={`transition-all duration-200 whitespace-nowrap rounded-full px-5 py-2 font-semibold text-sm border ${
+          selectedAccommodation === type
+            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+            : 'bg-white text-gray-600 border-gray-300 hover:bg-blue-50 hover:border-blue-500'
+        }`}
+      >
+        {type}
+      </button>
+    ))}
+  </div>
 
-            {sessionStorage.getItem('token') && (
-              <button
-                onClick={() => setActiveTab('Applied Rooms')}
-                className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
-                  activeTab === 'Applied Rooms'
-                    ? 'bg-[#0662B7] text-white shadow-md'
-                    : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                Applied Rooms
-              </button>
-            )}
-          </div>
-        </div>
+  {/* Search Input */}
+  <div className="w-full sm:w-64 relative">
+    <input
+      type="text"
+      placeholder="Search by area, landmark..."
+      className="w-full rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-sm"
+      onChange={(e) => {
+        const value = e.target.value.toLowerCase();
+        const filtered = rooms.filter(
+          (room) =>
+            room.location?.toLowerCase().includes(value) ||
+            room.city?.toLowerCase().includes(value)
+        );
+        setRooms(filtered.length ? filtered : []);
+      }}
+    />
+    <span className="absolute right-3 top-2.5 text-gray-400 text-sm">🔍</span>
+  </div>
+</div>
 
-        {/* Desktop View */}
-        <div className="hidden sm:flex flex-wrap sm:items-center sm:justify-between mt-3">
-          <div className="flex gap-2">
-            {['All Listings', ...(sessionStorage.getItem('token') ? ['My Listings', 'Applied Rooms'] : [])].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`rounded-full py-1 px-4 text-sm font-semibold whitespace-nowrap ${
-                  activeTab === tab
-                    ? 'bg-[#0662B7] text-white shadow-md'
-                    : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
 
-          {activeTab === 'All Listings' && (
-            <button
-              onClick={() => setShowFilters(true)}
-              className="flex items-center px-3 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
-            >
-              <FiFilter className="mr-2" />
-              Filters
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Filter Panel */}
-      <AnimatePresence>
-        {mobileFilterOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="sm:hidden border border-gray-300 rounded-md p-4 bg-white shadow mb-4"
-          >
-            <SearchFilters
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onSubmit={() => {
-                handleSearchSubmit();
-                setMobileFilterOpen(false);
-              }}
-              onReset={handleResetFilters}
-              activeTab="All Listings"
-              isLoading={isSearching}
-              onClose={() => setMobileFilterOpen(false)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Desktop Filter Modal */}
-      {showFilters && (
-        <SearchFilters
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          onSubmit={handleSearchSubmit}
-          onReset={handleResetFilters}
-          activeTab="All Listings"
-          isLoading={isSearching}
-          onClose={() => setShowFilters(false)}
-        />
-      )}
-
-      {/* Room Cards */}
+      {/* Room Cards or Loader */}
       {loading ? (
         renderSkeletonCards()
+      ) : filteredRooms.length === 0 ? (
+        <NoRoomsPlaceholder message="No rooms available for selected filters." />
       ) : (
-        <>
-          {(activeTab === 'Applied Rooms' ? appliedRooms : rooms).length === 0 ? (
-            <NoRoomsPlaceholder
-              message={
-                activeTab === 'Applied Rooms'
-                  ? "You haven't applied to any rooms yet."
-                  : activeTab === 'My Listings'
-                  ? "You haven't posted any rooms yet."
-                  : "No rooms found. Try adjusting your filters."
-              }
-            />
-          ) : (
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-  {(activeTab === 'Applied Rooms' ? appliedRooms : rooms).map((room) => (
-    <React.Fragment key={room.id}>
-      <div className="w-full">
-        <RoomCard
-          room={room}
-          activeTab={activeTab}
-          onFetchApplications={handleFetchApplications}
-          isAppliedView={activeTab === 'Applied Rooms'}
-          onToggleDetails={handleToggleDetails}
-          isExpanded={expandedRoomId === room.id}
-          onViewDetails={() => handleViewDetails(room)}
-          onCloseDetails={() => setExpandedRoomId(null)}
-        />
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+          {filteredRooms.map((room) => (
+            <React.Fragment key={room.id}>
+              <RoomCard
+                room={room}
+                onViewDetails={() => setSelectedRoom(room)}
+                activeTab="All Listings"
+              />
 
-      {/* Add the AnimatePresence block right here */}
-      <AnimatePresence>
-        {selectedRoom && selectedRoom.id === room.id && (
-          <motion.div
-            className="md:col-span-2 w-full relative"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{
-              opacity: 1,
-              height: 'auto',
-              transition: {
-                opacity: { duration: 0.3 },
-                height: { duration: 0.4 }
-              }
-            }}
-            exit={{
-              opacity: 0,
-              height: 0,
-              transition: {
-                opacity: { duration: 0.2 },
-                height: { duration: 0.3 }
-              }
-            }}
-            layout
-          >
-            <button
-              onClick={() => setSelectedRoom(null)}
-              className="absolute top-4 right-4 z-50 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
-              style={{ zIndex: 1000 }}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            
-            <RoomDetailsPage 
-              roomId={room.id} 
-              onClose={() => setSelectedRoom(null)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </React.Fragment>
-  ))}
-</div>
-          )}
-        </>
+              {/* Room Details Expand */}
+              <AnimatePresence>
+                {selectedRoom?.id === room.id && (
+                  <motion.div
+                    className="md:col-span-2 w-full relative"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                  >
+                    <button
+                      onClick={() => setSelectedRoom(null)}
+                      className="absolute top-4 right-4 bg-gray-300 p-2 rounded-full shadow hover:bg-gray-500 z-50"
+                    >
+                      ✕
+                    </button>
+                    <RoomDetailsPage
+                      roomId={room.id}
+                      onClose={() => setSelectedRoom(null)}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </React.Fragment>
+          ))}
+        </div>
       )}
-
-      {/* Modals */}
-      <AnimatePresence>
-        {showApplicationsModal && (
-          <ApplicationsModal
-            applications={roomApplications}
-            onClose={() => setShowApplicationsModal(false)}
-          />
-        )}
-        {showEditRoomModal && editingRoom && (
-          <EditRoomModal
-            room={editingRoom}
-            onClose={() => setShowEditRoomModal(false)}
-            onRoomUpdated={() => setShowEditRoomModal(false)}
-          />
-        )}
-        {showAddRoomModal && (
-          <AddRoomModal onClose={() => setShowAddRoomModal(false)} />
-        )}
-      </AnimatePresence>
     </div>
   );
 };
 
 export default Dashboard;
-

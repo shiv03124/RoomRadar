@@ -147,7 +147,8 @@ const RoomForm = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-6">
+      <div className="grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-6">
+
         {/* Title */}
         <div className="sm:col-span-6">
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
@@ -197,7 +198,7 @@ const RoomForm = ({
 </div>
 
 
-       <div className="sm:col-span-3">
+    <div className="sm:col-span-3">
   <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
     City<span className="text-red-500">*</span>
   </label>
@@ -218,13 +219,9 @@ const RoomForm = ({
     />
     <datalist id="cityOptions">
       {cities
-        .filter(city => 
-          city.toLowerCase().includes(citySearchTerm.toLowerCase())
-        )
+        .filter(city => city.toLowerCase().includes(citySearchTerm.toLowerCase()))
         .map((city, index) => (
-          <option key={`city-${index}`} value={city}>
-            {city}
-          </option>
+          <option key={`city-${index}`} value={city} />
         ))}
     </datalist>
     {room.city && (
@@ -235,6 +232,7 @@ const RoomForm = ({
           setCitySearchTerm('');
         }}
         className="absolute inset-y-0 right-0 pr-3 flex items-center"
+        aria-label="Clear city"
       >
         <svg
           className="h-5 w-5 text-gray-400"
@@ -253,6 +251,7 @@ const RoomForm = ({
     )}
   </div>
 </div>
+
         
         <div className="sm:col-span-3">
           <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">
@@ -524,8 +523,10 @@ const RoomForm = ({
         {/* Images */}
        <div className="sm:col-span-6">
   <label className="block text-sm font-medium text-gray-700 mb-2">
-    Images<span className="text-red-700">*</span> {imageError && <span className="text-red-500 text-xs">(At least one image is required)</span>}
-  </label>
+  Images<span className="text-red-700">*</span>
+  {imageError && <span className="text-red-500 text-xs ml-2">(At least one image is required)</span>}
+</label>
+
   
   <div className="flex flex-wrap items-center gap-2">
     {/* Upload Area */}

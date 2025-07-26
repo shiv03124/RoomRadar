@@ -13,12 +13,15 @@
     "axios": "^1.10.0",
     "framer-motion": "^12.15.0",
     "jwt-decode": "^4.0.0",
+    "postcss-loader": "^8.1.1",
     "rc-slider": "^11.1.8",
     "react": "^18.3.1",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
+    "react-responsive": "^10.0.1",
     "react-router-dom": "^7.5.0",
     "react-scripts": "5.0.1",
     "use-places-autocomplete": "^4.0.1",
@@ -51,6 +54,6 @@
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^4.1.11"
   }
 }
