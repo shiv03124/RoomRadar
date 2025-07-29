@@ -18,11 +18,12 @@ const Dashboard = () => {
   const [selectedGender, setSelectedGender] = useState('All');
   const [selectedRoom, setSelectedRoom] = useState(null);
 const gridRef = useRef(null);
-
+ 
   const fetchApprovedRooms = async () => {
   setLoading(true);
   try {
     const userId = sessionStorage.getItem('userId');
+    console.log(userId)
     let url = `https://roomradarbackend.onrender.com/api/rooms/approved?accommodationType=${selectedAccommodation}`;
 
     // Add userId only if user is logged in
@@ -30,7 +31,13 @@ const gridRef = useRef(null);
       url += `&userId=${userId}`;
     }
 
-    const data = await fetchRooms(url);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
     setRooms(data);
   } catch (error) {
     console.error('Error fetching approved rooms:', error.message);
@@ -42,6 +49,7 @@ const gridRef = useRef(null);
 useEffect(() => {
   fetchApprovedRooms();
 }, [selectedAccommodation]);
+
 
 
 

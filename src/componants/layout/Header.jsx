@@ -10,11 +10,11 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const token = sessionStorage.getItem("token");
   const role = userData?.role || sessionStorage.getItem("role");
   const activeTab = location.pathname;
 
   const handleAddRoomClick = () => {
-    const token = sessionStorage.getItem("token");
     if (!token) {
       toast.error("Please login to add a room");
       navigate('/login');
@@ -46,7 +46,16 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             }}
           />
         </div>
-        <ProfileDropdown userData={userData} setUserData={setUserData} />
+        {!token ? (
+          <button
+            onClick={() => navigate('/login')}
+            className="px-4 py-2 bg-[#0662B7] text-white rounded-md text-sm hover:bg-indigo-600"
+          >
+            Login / Sign up
+          </button>
+        ) : (
+          <ProfileDropdown userData={userData} setUserData={setUserData} />
+        )}
       </nav>
 
       {/* Bottom sticky tabs bar on mobile */}
@@ -67,7 +76,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             className={`text-sm font-medium px-3 py-1 rounded-md ${
               activeTab.includes('/listings/mine')
                 ? 'bg-[#0662B7] text-white shadow'
-                : 'text-gray-700 hover:bg-[#0662B7] hover:text-white ' 
+                : 'text-gray-700 hover:bg-[#0662B7] hover:text-white' 
             }`}
           >
             My Listings
