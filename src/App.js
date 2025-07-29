@@ -71,7 +71,9 @@ function App() {
   };
 
   const hideHeaderOnRoutes = ["/", "/login", "/signup"];
-  const shouldShowHeader = !hideHeaderOnRoutes.includes(location.pathname);
+  const path = location.pathname.toLowerCase().replace(/\/+$/, ""); // remove trailing slashes
+const shouldShowHeader = !hideHeaderOnRoutes.includes(path);
+
 
   return (
     <div className="app-container">
