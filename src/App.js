@@ -68,11 +68,15 @@ function App() {
     } catch (err) {
       console.error("Failed to fetch user profile:", err);
     }
-  };
+  };  
 
-  const hideHeaderOnRoutes = ["/", "/login", "/signup"];
-  const path = location.pathname.toLowerCase().replace(/\/+$/, ""); // remove trailing slashes
-const shouldShowHeader = !hideHeaderOnRoutes.includes(path);
+ const hideHeaderOnRoutes = ["/", "/login", "/signup"];
+const path = location.pathname.toLowerCase();
+
+const shouldShowHeader = !hideHeaderOnRoutes.some(route =>
+  path.startsWith(route)
+);
+
 
 
   return (
