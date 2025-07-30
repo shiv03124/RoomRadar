@@ -122,7 +122,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             </div>
 
             {/* Tabs + Actions */}
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 pr-2 sm:pr-4">
               {role === "user" ? (
                 <>
                   <button
