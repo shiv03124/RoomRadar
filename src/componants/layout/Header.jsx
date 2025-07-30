@@ -116,7 +116,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = '';
-                  e.target.parentElement.innerHTML = `<span class="text-2xl font-bold text-red-600">RoomRadar</span>`;
+                  e.target.parentElement.innerHTML = `<span class="text-2xl z-51 font-bold text-red-600">RoomRadar</span>`;
                 }}
               />
             </div>
