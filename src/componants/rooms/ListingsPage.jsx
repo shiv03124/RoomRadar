@@ -63,8 +63,8 @@ const ListingsPage = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-5rem)] overflow-y-auto max-w-7xl pb-20 mx-auto px-4 py-4 sm:py-6">
-      
+   <div className="h-[calc(100vh-5rem)] overflow-y-auto max-w-7xl pb-20 mx-auto px-4 pt-20 sm:pt-24">
+  
       <div className="h-full overflow-y-auto pb-4">
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">

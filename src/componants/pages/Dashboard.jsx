@@ -79,7 +79,8 @@ useEffect(() => {
 window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-6 h-[calc(100vh-5rem)] overflow-y-auto pb-20">
+   <div className="max-w-7xl mx-auto px-4 pt-20 h-[calc(100vh-5rem)] overflow-y-auto pb-20">
+
 
 
       {/* Tabs + Search */}
