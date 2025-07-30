@@ -106,7 +106,8 @@ const ProfilePage = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="h-[calc(100vh-4rem)] overflow-y-auto bg-gray-50 px-4 sm:px-6 lg:px-8 top-0"
+     className="h-[calc(100vh-4rem)] overflow-y-auto bg-gray-50 px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24"
+
     >
       <div className="max-w-4xl py-2 mx-auto">
         {/* Back Button - Mobile Only */}

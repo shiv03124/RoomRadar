@@ -30,7 +30,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
   return (
     <>
       {/* Top header: Logo + Profile only on mobile */}
-     <nav className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-sm flex items-center justify-between px-4 h-16 sm:hidden ${className}`} style={style}>
+     <nav className={`fixed top-0 left-0 right-0 z-51 bg-white shadow-sm flex items-center justify-between px-4 h-16 sm:hidden ${className}`} style={style}>
   <div
           className="flex items-center cursor-pointer"
           onClick={() => navigate('/dashboard')}
