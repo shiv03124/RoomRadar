@@ -48,12 +48,8 @@ const ProfileDropdown = ({ userData, setUserData }) => {
       </button>
 
       {profileOpen && (
-        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-          {/* <div className="px-4 py-2 text-sm text-gray-700 border-b">
-            <div className="font-medium">{userData?.fullName || 'User'}</div>
-            <div className="text-gray-500 truncate">{userData?.email || 'user@example.com'}</div>
-          </div> */}
-          <Link
+       <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[100]">
+            <Link
             to="/profile"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             onClick={() => setProfileOpen(false)}

@@ -166,7 +166,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
               ) : (
                 <button
                   onClick={() => navigate('/login')}
-                  className="px-4 py-2 bg-[#0662B7] text-white rounded-md text-sm hover:bg-indigo-600"
+                  className="px-4 py-2 bg-[#0662B7] z-50 text-white rounded-md text-sm hover:bg-indigo-600"
                 >
                   Login / Sign up
                 </button>
