@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import defaultProfile from './images/profile.png'
 
 const ProfileDropdown = ({ userData, setUserData }) => {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -40,7 +41,7 @@ const ProfileDropdown = ({ userData, setUserData }) => {
   src={
     userData?.profileImageUrl?.trim()
       ? userData.profileImageUrl
-      : 'http://randomuser.me/api/portraits/men/1.jpg'
+      : defaultProfile
   }
   alt="User profile"
 />
