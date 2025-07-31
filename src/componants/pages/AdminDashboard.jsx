@@ -104,7 +104,7 @@ const AdminDashboard = ({ userData }) => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 relative">
+    <div className="flex h-screen bg-gray-50 relative pt-14">
       {/* Mobile sidebar toggle button */}
       {isMobile && (
         <button

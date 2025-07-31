@@ -30,10 +30,10 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
   return (
     <>
       {/* Top header: Logo + Profile only on mobile */}
-     <nav className={`fixed top-0 left-0 right-0 z-51 bg-white shadow-sm flex items-center justify-between px-4 h-16 sm:hidden ${className}`} style={style}>
-  <div
+      <nav className={`fixed top-0 left-0 right-0 z-51 bg-white shadow-sm flex items-center justify-between px-4 h-16 sm:hidden ${className}`} style={style}>
+        <div
           className="flex items-center cursor-pointer"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate(role === 'admin' ? '/admindashboard' : '/dashboard')}
         >
           <img
             src={logo}
@@ -46,6 +46,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             }}
           />
         </div>
+
         {!token ? (
           <button
             onClick={() => navigate('/login')}
@@ -53,9 +54,19 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
           >
             Login / Sign up
           </button>
-        ) : (
+        ) : role === 'user' ? (
           <ProfileDropdown userData={userData} setUserData={setUserData} />
-        )}
+        ) : role === 'admin' ? (
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => navigate('/admindashboard')}
+              className="px-3 py-2 bg-[#0662B7] text-white rounded-md text-sm hover:bg-indigo-600"
+            >
+              Admin Dashboard
+            </button>
+            <ProfileDropdown userData={userData} setUserData={setUserData} />
+          </div>
+        ) : null}
       </nav>
 
       {/* Bottom sticky tabs bar on mobile */}
@@ -72,11 +83,11 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             All Listings
           </button>
           <button
-            onClick={() => navigate('/listings/My Listings')}
+            onClick={() => navigate('/listings/mine')}
             className={`text-sm font-medium px-3 py-1 rounded-md ${
               activeTab.includes('/listings/mine')
                 ? 'bg-[#0662B7] text-white shadow'
-                : 'text-gray-700 hover:bg-[#0662B7] hover:text-white' 
+                : 'text-gray-700 hover:bg-[#0662B7] hover:text-white'
             }`}
           >
             My Listings
@@ -107,7 +118,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             {/* Logo */}
             <div
               className="flex items-center cursor-pointer"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate(role === 'admin' ? '/admindashboard' : '/dashboard')}
             >
               <img
                 src={logo}
@@ -136,7 +147,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
                     All Listings
                   </button>
                   <button
-                    onClick={() => navigate('/listings/My Listings')}
+                    onClick={() => navigate('/listings/mine')}
                     className={`text-sm sm:text-base px-3 py-1.5 rounded-md font-medium ${
                       activeTab.includes('/listings/mine')
                         ? 'bg-[#0662B7] text-white shadow'
@@ -160,6 +171,16 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
                     className="bg-[#0662B7] hover:bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium transition"
                   >
                     Add Room
+                  </button>
+                  <ProfileDropdown userData={userData} setUserData={setUserData} />
+                </>
+              ) : role === "admin" ? (
+                <>
+                  <button
+                    onClick={() => navigate('/admindashboard')}
+                    className="px-4 py-2 bg-[#0662B7] text-white rounded-md text-sm hover:bg-indigo-600"
+                  >
+                    Admin Dashboard
                   </button>
                   <ProfileDropdown userData={userData} setUserData={setUserData} />
                 </>

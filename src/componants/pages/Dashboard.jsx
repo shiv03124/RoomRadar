@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useRef } from 'react';
-
+import React, { useEffect, useState, useRef } from 'react';
 import RoomCard from '../rooms/RoomCard';
 import { Skeleton } from '../ui/Skeleton';
 import { NoRoomsPlaceholder } from '../ui/NoRoomsPlaceholder';
 import RoomDetailsPage from '../rooms/RoomDetailsPage';
 import { AnimatePresence, motion } from 'framer-motion';
-import { fetchRooms } from '../utils/fetchUserProfile';
 
-const accommodationTypes = ['Flat','PG',  'Hostel'];
+const accommodationTypes = ['Flat', 'PG', 'Hostel'];
 const genders = ['All', 'Male', 'Female', 'Other'];
 
 const Dashboard = () => {
@@ -17,45 +14,51 @@ const Dashboard = () => {
   const [selectedAccommodation, setSelectedAccommodation] = useState('Flat');
   const [selectedGender, setSelectedGender] = useState('All');
   const [selectedRoom, setSelectedRoom] = useState(null);
-const gridRef = useRef(null);
- 
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const gridRef = useRef(null);
+
   const fetchApprovedRooms = async () => {
-  setLoading(true);
-  try {
-    const userId = sessionStorage.getItem('userId');
-    console.log(userId)
-    let url = `https://roomradarbackend.onrender.com/api/rooms/approved?accommodationType=${selectedAccommodation}`;
+    setLoading(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
-    // Add userId only if user is logged in
-    if (userId) {
-      url += `&userId=${userId}`;
+    try {
+      const userId = sessionStorage.getItem('userId');
+      let url = `https://roomradarbackend.onrender.com/api/rooms/approved?accommodationType=${selectedAccommodation}`;
+
+      if (userId) {
+        url += `&userId=${userId}`;
+      }
+
+      const response = await fetch(url, { signal: controller.signal });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setRooms(data);
+    } catch (error) {
+      console.error('Error fetching approved rooms:', error.message);
+    } finally {
+      clearTimeout(timeoutId);
+      setLoading(false);
     }
+  };
 
-    const response = await fetch(url);
+  useEffect(() => {
+    fetchApprovedRooms();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [selectedAccommodation]);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    setRooms(data);
-  } catch (error) {
-    console.error('Error fetching approved rooms:', error.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
-useEffect(() => {
-  fetchApprovedRooms();
-}, [selectedAccommodation]);
-
-
-
-
-  const filteredRooms = rooms.filter((room) =>
-    selectedGender === 'All' ? true : room.preferredGender === selectedGender
-  );
+  const filteredRooms = rooms.filter((room) => {
+    const genderMatch = selectedGender === 'All' || room.preferredGender === selectedGender;
+    const locationMatch =
+      room.location?.toLowerCase().includes(searchTerm) ||
+      room.city?.toLowerCase().includes(searchTerm);
+    return genderMatch && locationMatch;
+  });
 
   const renderSkeletonCards = () => {
     const skeletonArray = new Array(4).fill(null);
@@ -76,52 +79,39 @@ useEffect(() => {
       </div>
     );
   };
-window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-   <div className="max-w-7xl mx-auto px-4 pt-20 h-[calc(100vh-5rem)] overflow-y-auto pb-20">
-
-
-
+    <div className="max-w-7xl mx-auto px-4 pt-20 h-[calc(100vh-5rem)] overflow-y-auto pb-20">
       {/* Tabs + Search */}
-<div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-  {/* Accommodation Tabs */}
-  <div className="flex gap-2 overflow-x-auto pb-2 w-full sm:w-auto">
-    {accommodationTypes.map((type) => (
-      <button
-        key={type}
-        onClick={() => setSelectedAccommodation(type)}
-        className={`transition-all duration-200 whitespace-nowrap rounded-full px-5 py-2 font-semibold text-sm border ${
-          selectedAccommodation === type
-            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-            : 'bg-white text-gray-600 border-gray-300 hover:bg-blue-50 hover:border-blue-500'
-        }`}
-      >
-        {type}
-      </button>
-    ))}
-  </div>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+        {/* Accommodation Tabs */}
+        <div className="flex gap-2 overflow-x-auto pb-2 w-full sm:w-auto">
+          {accommodationTypes.map((type) => (
+            <button
+              key={type}
+              onClick={() => setSelectedAccommodation(type)}
+              className={`transition-all duration-200 whitespace-nowrap rounded-full px-5 py-2 font-semibold text-sm border ${
+                selectedAccommodation === type
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                  : 'bg-white text-gray-600 border-gray-300 hover:bg-blue-50 hover:border-blue-500'
+              }`}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
 
-  {/* Search Input */}
-  <div className="w-full sm:w-64 relative">
-    <input
-      type="text"
-      placeholder="Search by area, landmark..."
-      className="w-full rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-sm"
-      onChange={(e) => {
-        const value = e.target.value.toLowerCase();
-        const filtered = rooms.filter(
-          (room) =>
-            room.location?.toLowerCase().includes(value) ||
-            room.city?.toLowerCase().includes(value)
-        );
-        setRooms(filtered.length ? filtered : []);
-      }}
-    />
-    <span className="absolute right-3 top-2.5 text-gray-400 text-sm">🔍</span>
-  </div>
-</div>
-
+        {/* Search Input */}
+        <div className="w-full sm:w-64 relative">
+          <input
+            type="text"
+            placeholder="Search by area, landmark..."
+            className="w-full rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-sm"
+            onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+          />
+          <span className="absolute right-3 top-2.5 text-gray-400 text-sm">🔍</span>
+        </div>
+      </div>
 
       {/* Room Cards or Loader */}
       {loading ? (
@@ -129,7 +119,7 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
       ) : filteredRooms.length === 0 ? (
         <NoRoomsPlaceholder message="No rooms available for selected filters." />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredRooms.map((room) => (
             <React.Fragment key={room.id}>
               <RoomCard
@@ -137,8 +127,6 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
                 onViewDetails={() => setSelectedRoom(room)}
                 activeTab="All Listings"
               />
-
-              {/* Room Details Expand */}
               <AnimatePresence>
                 {selectedRoom?.id === room.id && (
                   <motion.div

@@ -17,6 +17,7 @@ import ForgotPasswordPage from './componants/forgotpassword/ForgotPasswordPage';
 import VerifyOtpPage from './componants/forgotpassword/VerifyOtpPage';
 import ResetPasswordPage from './componants/forgotpassword/ResetPasswordPage';
 import ListingsPage from './componants/rooms/ListingsPage';
+import AdminLogin from './componants/AdminLogin';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const role = sessionStorage.getItem("role");
@@ -103,6 +104,10 @@ function App() {
             onLoginSuccess={handleLoginSuccess}
             userData={userData}
           />
+        } />
+
+         <Route path="/adminlogin" element={
+          <AdminLogin onLoginSuccess={handleLoginSuccess} userData={userData} />
         } />
         <Route path="/dashboard" element={<Dashboard userData={userData} />} />
         <Route path="/admindashboard" element={
