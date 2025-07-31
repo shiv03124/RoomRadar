@@ -11,7 +11,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
   });
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -32,9 +32,10 @@ const AdminLogin = ({ onLoginSuccess }) => {
 
       toast.success("Admin login successful");
 
-      // Save token to sessionStorage as "token"
+      // Save token, role, and email to sessionStorage
       sessionStorage.setItem("token", data.token);
       sessionStorage.setItem("role", "admin");
+      sessionStorage.setItem("email", formData.email); // Save email
 
       if (onLoginSuccess) {
         onLoginSuccess(data, "admin");
