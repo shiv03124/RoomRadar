@@ -30,7 +30,7 @@ const ListingsPage = () => {
 
     let endpoint = 'https://roomradarbackend.onrender.com/api/rooms/';
 
-    if (type === 'My Listings' && userId) {
+    if (type === 'mine' && userId) {
       endpoint += `user/${userId}`;
     } else if (type === 'applied' && userId) {
       endpoint += `applied/${userId}`;

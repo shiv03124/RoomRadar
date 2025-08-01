@@ -322,7 +322,7 @@ export const updateRoom = async (room, roomId) => {
   if (!response.ok) {
     throw new Error('Failed to update room');
   }
-
+ 
   return await response.json();
 }; 
 

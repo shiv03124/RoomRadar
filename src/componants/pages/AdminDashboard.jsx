@@ -9,6 +9,7 @@ import RoomList from '../rooms/RoomList';
 import RoomDetailsModal from '../rooms/RoomDetailsModal';
 import { fetchRooms } from '../utils/fetchUserProfile';
 import { FiMenu, FiX } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = ({ userData }) => {
   const [rooms, setRooms] = useState([]);
@@ -19,7 +20,7 @@ const AdminDashboard = ({ userData }) => {
   const [viewMode, setViewMode] = useState('table');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
+  const navigate=useNavigate();
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -31,6 +32,15 @@ const AdminDashboard = ({ userData }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+useEffect(() => {
+  const token = sessionStorage.getItem("token");
+  const email = sessionStorage.getItem("email");
+
+  if (!token || !email) {
+    // Navigate back to login
+    navigate("/adminlogin");
+  }
+}, []);
 
   useEffect(() => {
     const loadRooms = async () => {

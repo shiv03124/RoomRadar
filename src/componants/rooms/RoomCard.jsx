@@ -236,7 +236,7 @@ const RoomCard = ({
                     View
                   </button>
 
-                  {activeTab === 'My Listings' && (
+                  {activeTab === 'mine' && (
                     <button
                       onClick={(e) => { e.stopPropagation(); handleApplicationsClick(e); }}
                       className="min-w-[200px] px-4 py-1.5 md:pb-2 text-sm rounded-md bg-[#0662B7] text-white hover:bg-indigo-700"

@@ -1,10 +1,10 @@
 
 
 export const fetchAdminByEmail = async (email, token) => {
-  const response = await fetch(`https://roomradarbackend.onrender.com/api/admins/by-email?email=${email}`, {
+  const response = await fetch(`https://roomradarbackend.onrender.com/api/admins/by-email?email=shivkumarpatil.pjsofttech@gmail.com`, {
     headers: {
       Authorization: `Bearer ${token}`,
-    },
+    }, 
   });
 
   if (!response.ok) {

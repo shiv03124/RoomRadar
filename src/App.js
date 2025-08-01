@@ -35,9 +35,10 @@ function App() {
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     const email = sessionStorage.getItem("email");
+    const role = sessionStorage.getItem("role");
 
-    if (token && email) {
-      fetchUserProfile()
+    if (token && email && role !== "admin") {
+      fetchUserProfile(token)
         .then(data => {
           if (data) {
             setUserData({ ...data, token });
@@ -56,18 +57,18 @@ function App() {
     sessionStorage.setItem("email", data.email);
     sessionStorage.setItem("role", role);
 
-    try {
-      const fullProfile = await fetchUserProfile(data.token);
-      const updatedUserData = { ...fullProfile, token: data.token };
-      setUserData(updatedUserData);
-
-      if (role === "admin") {
-        navigate("/admindashboard");
-      } else {
+    if (role === "admin") {
+      setUserData({ email: data.email, role, token: data.token });
+      navigate("/admindashboard");
+    } else {
+      try {
+        const fullProfile = await fetchUserProfile(data.token);
+        const updatedUserData = { ...fullProfile, token: data.token };
+        setUserData(updatedUserData);
         navigate("/dashboard");
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
       }
-    } catch (err) {
-      console.error("Failed to fetch user profile:", err);
     }
   };
 
@@ -90,24 +91,25 @@ function App() {
           setUserData={setUserData}
         />
       )}
- 
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-<Route path="/verify-otp" element={<VerifyOtpPage />} />
-<Route path="/reset-password" element={<ResetPasswordPage />} />
-
+        <Route path="/verify-otp" element={<VerifyOtpPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/login" element={
           <Login
             onLoginSuccess={handleLoginSuccess}
             userData={userData}
           />
         } />
-
-         <Route path="/adminlogin" element={
-          <AdminLogin onLoginSuccess={handleLoginSuccess} userData={userData} />
+        <Route path="/adminlogin" element={
+          <AdminLogin
+            onLoginSuccess={handleLoginSuccess}
+            userData={userData}
+          />
         } />
         <Route path="/dashboard" element={<Dashboard userData={userData} />} />
         <Route path="/admindashboard" element={
@@ -121,14 +123,14 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/room/:roomId" element={<RoomDetailsPage />} />
-         <Route path="/listings/:type" element={
-    <ProtectedRoute allowedRoles={["user"]}>
-      <ListingsPage />
-    </ProtectedRoute>
-  } />
+        <Route path="/listings/:type" element={
+          <ProtectedRoute allowedRoles={["user"]}>
+            <ListingsPage />
+          </ProtectedRoute>
+        } />
       </Routes>
 
-      {/* {shouldShowHeader && <Footer />} */}
+      {/* Optional: <Footer /> */}
     </div>
   );
 }

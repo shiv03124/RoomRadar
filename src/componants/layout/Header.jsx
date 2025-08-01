@@ -29,7 +29,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
 
   return (
     <>
-      {/* Top header: Logo + Profile only on mobile */}
+      {/* Mobile Header */}
       <nav className={`fixed top-0 left-0 right-0 z-51 bg-white shadow-sm flex items-center justify-between px-4 h-16 sm:hidden ${className}`} style={style}>
         <div
           className="flex items-center cursor-pointer"
@@ -42,7 +42,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = '';
-              e.target.parentElement.innerHTML = `<span class="text-2xl font-bold text-red-600">RoomRadar</span>`;
+              e.target.parentElement.innerHTML = `<span class='text-2xl font-bold text-red-600'>RoomRadar</span>`;
             }}
           />
         </div>
@@ -56,70 +56,24 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
           </button>
         ) : role === 'user' ? (
           <ProfileDropdown userData={userData} setUserData={setUserData} />
-        ) : role === 'admin' ? (
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/admindashboard')}
-              className="px-3 py-2 bg-[#0662B7] text-white rounded-md text-sm hover:bg-indigo-600"
-            >
-              Admin Dashboard
-            </button>
-            <ProfileDropdown userData={userData} setUserData={setUserData} />
-          </div>
         ) : null}
       </nav>
 
-      {/* Bottom sticky tabs bar on mobile */}
+      {/* Mobile Bottom Nav for Users */}
       {role === "user" && (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-md flex justify-around items-center h-16 sm:hidden z-50">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className={`text-sm font-medium px-3 py-1 rounded-md ${
-              activeTab.includes('/listings/all')
-                ? 'bg-[#0662B7] text-white shadow'
-                : 'text-gray-700 hover:bg-[#0662B7] hover:text-white'
-            }`}
-          >
-            All Listings
-          </button>
-          <button
-            onClick={() => navigate('/listings/mine')}
-            className={`text-sm font-medium px-3 py-1 rounded-md ${
-              activeTab.includes('/listings/mine')
-                ? 'bg-[#0662B7] text-white shadow'
-                : 'text-gray-700 hover:bg-[#0662B7] hover:text-white'
-            }`}
-          >
-            My Listings
-          </button>
-          <button
-            onClick={() => navigate('/listings/applied')}
-            className={`text-sm font-medium px-3 py-1 rounded-md ${
-              activeTab.includes('/listings/applied')
-                ? 'bg-[#0662B7] text-white shadow'
-                : 'text-gray-700 hover:bg-gray-100 hover:text-white'
-            }`}
-          >
-            Applied Rooms
-          </button>
-          <button
-            onClick={handleAddRoomClick}
-            className="bg-[#0662B7] hover:bg-indigo-600 text-white px-4 py-1 rounded-md text-sm font-medium"
-          >
-            Add
-          </button>
+          <button onClick={() => navigate('/dashboard')} className={`text-sm font-medium px-3 py-1 rounded-md ${activeTab.includes('/listings/all') ? 'bg-[#0662B7] text-white shadow' : 'text-gray-700 hover:bg-[#0662B7] hover:text-white'}`}>All Listings</button>
+          <button onClick={() => navigate('/listings/mine')} className={`text-sm font-medium px-3 py-1 rounded-md ${activeTab.includes('/listings/mine') ? 'bg-[#0662B7] text-white shadow' : 'text-gray-700 hover:bg-[#0662B7] hover:text-white'}`}>My Listings</button>
+          <button onClick={() => navigate('/listings/applied')} className={`text-sm font-medium px-3 py-1 rounded-md ${activeTab.includes('/listings/applied') ? 'bg-[#0662B7] text-white shadow' : 'text-gray-700 hover:bg-gray-100 hover:text-white'}`}>Applied Rooms</button>
+          <button onClick={handleAddRoomClick} className="bg-[#0662B7] hover:bg-indigo-600 text-white px-4 py-1 rounded-md text-sm font-medium">Add</button>
         </div>
       )}
 
-      {/* Desktop Header: show everything */}
+      {/* Desktop Header */}
       <nav className={`hidden sm:block fixed top-0 left-0 right-0 z-50 bg-white shadow-sm ${className}`} style={style}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            {/* Logo */}
-            <div
-              className="flex items-center cursor-pointer"
-              onClick={() => navigate(role === 'admin' ? '/admindashboard' : '/dashboard')}
-            >
+            <div className="flex items-center cursor-pointer" onClick={() => navigate(role === 'admin' ? '/admindashboard' : '/dashboard')}>
               <img
                 src={logo}
                 alt="RoomRadar Logo"
@@ -127,70 +81,25 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = '';
-                  e.target.parentElement.innerHTML = `<span class="text-2xl z-51 font-bold text-red-600">RoomRadar</span>`;
+                  e.target.parentElement.innerHTML = `<span class='text-2xl font-bold text-red-600'>RoomRadar</span>`;
                 }}
               />
             </div>
-
-            {/* Tabs + Actions */}
             <div className="flex items-center gap-2 sm:gap-4 pr-2 sm:pr-4">
-              {role === "user" ? (
+              {role === "user" && (
                 <>
-                  <button
-                    onClick={() => navigate('/dashboard')}
-                    className={`text-sm sm:text-base px-3 py-1.5 rounded-md font-medium ${
-                      activeTab.includes('/listings/all')
-                        ? 'bg-[#0662B7] text-white shadow'
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
-                  >
-                    All Listings
-                  </button>
-                  <button
-                    onClick={() => navigate('/listings/mine')}
-                    className={`text-sm sm:text-base px-3 py-1.5 rounded-md font-medium ${
-                      activeTab.includes('/listings/mine')
-                        ? 'bg-[#0662B7] text-white shadow'
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
-                  >
-                    My Listings
-                  </button>
-                  <button
-                    onClick={() => navigate('/listings/applied')}
-                    className={`text-sm sm:text-base px-3 py-1.5 rounded-md font-medium ${
-                      activeTab.includes('/listings/applied')
-                        ? 'bg-[#0662B7] text-white shadow'
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
-                  >
-                    Applied Rooms
-                  </button>
-                  <button
-                    onClick={handleAddRoomClick}
-                    className="bg-[#0662B7] hover:bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium transition"
-                  >
-                    Add Room
-                  </button>
+                  <button onClick={() => navigate('/dashboard')} className={`text-sm sm:text-base px-3 py-1.5 rounded-md font-medium ${activeTab.includes('/listings/all') ? 'bg-[#0662B7] text-white shadow' : 'bg-gray-100 hover:bg-gray-200'}`}>All Listings</button>
+                  <button onClick={() => navigate('/listings/mine')} className={`text-sm sm:text-base px-3 py-1.5 rounded-md font-medium ${activeTab.includes('/listings/mine') ? 'bg-[#0662B7] text-white shadow' : 'bg-gray-100 hover:bg-gray-200'}`}>My Listings</button>
+                  <button onClick={() => navigate('/listings/applied')} className={`text-sm sm:text-base px-3 py-1.5 rounded-md font-medium ${activeTab.includes('/listings/applied') ? 'bg-[#0662B7] text-white shadow' : 'bg-gray-100 hover:bg-gray-200'}`}>Applied Rooms</button>
+                  <button onClick={handleAddRoomClick} className="bg-[#0662B7] hover:bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium transition">Add Room</button>
                   <ProfileDropdown userData={userData} setUserData={setUserData} />
                 </>
-              ) : role === "admin" ? (
-                <>
-                  <button
-                    onClick={() => navigate('/admindashboard')}
-                    className="px-4 py-2 bg-[#0662B7] text-white rounded-md text-sm hover:bg-indigo-600"
-                  >
-                    Admin Dashboard
-                  </button>
-                  <ProfileDropdown userData={userData} setUserData={setUserData} />
-                </>
-              ) : (
-                <button
-                  onClick={() => navigate('/login')}
-                  className="px-4 py-2 bg-[#0662B7] z-50 text-white rounded-md text-sm hover:bg-indigo-600"
-                >
-                  Login / Sign up
-                </button>
+              )}
+              {role === "admin" && (
+                <button onClick={() => navigate('/admindashboard')} className="px-4 py-2 bg-[#0662B7] text-white rounded-md text-sm hover:bg-indigo-600">Admin Dashboard</button>
+              )}
+              {!token && (
+                <button onClick={() => navigate('/login')} className="px-4 py-2 bg-[#0662B7] z-50 text-white rounded-md text-sm hover:bg-indigo-600">Login / Sign up</button>
               )}
             </div>
           </div>
@@ -198,11 +107,7 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
       </nav>
 
       {showAddRoomModal && (
-        <AddRoomModal
-          onClose={() => setShowAddRoomModal(false)}
-          onRoomAdded={handleRoomAdded}
-          userData={userData}
-        />
+        <AddRoomModal onClose={() => setShowAddRoomModal(false)} onRoomAdded={handleRoomAdded} userData={userData} />
       )}
     </>
   );
