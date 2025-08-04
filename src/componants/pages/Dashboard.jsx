@@ -25,7 +25,7 @@ const Dashboard = () => {
 
     try {
       const userId = sessionStorage.getItem('userId');
-      let url = `https://roomradarbackend.onrender.com/api/rooms/type?accommodationType=${selectedAccommodation}`;
+      let url = `https://roomradarbackend.onrender.com/api/rooms/approved?accommodationType=${selectedAccommodation}`;
 
       if (userId) {
         url += `&userId=${userId}`;
