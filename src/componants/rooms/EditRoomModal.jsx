@@ -15,7 +15,7 @@ const EditRoomModal = ({ room, onClose, onRoomUpdated }) => {
     area: '',
     noofvacancies: '',
     accommodationType: 'PG',
-    configuration: '',
+    configuration: '', 
     furnished: 'Fully',
     availableFrom: '',
     rent: '',

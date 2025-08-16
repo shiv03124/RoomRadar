@@ -24,7 +24,7 @@ const ProfileDropdown = ({ userData, setUserData }) => {
   };
 
   const handleLogout = () => {
-    sessionStorage.clear();
+    localStorage.clear();
     navigate('/login'); 
   };
 

@@ -3,18 +3,18 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(sessionStorage.getItem('token') || null);
-  const [email, setEmail] = useState(sessionStorage.getItem('userEmail') || null);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem('token'));
+  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [email, setEmail] = useState(localStorage.getItem('userEmail') || null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
   useEffect(() => {
     if (token) {
-      sessionStorage.setItem('token', token);
-      sessionStorage.setItem('userEmail', email);
+      localStorage.setItem('token', token);
+      localStorage.setItem('userEmail', email);
       setIsAuthenticated(true);
     } else {
-      sessionStorage.removeItem('authToken');
-      sessionStorage.removeItem('userEmail');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userEmail');
       setIsAuthenticated(false);
     }
   }, [token, email]);

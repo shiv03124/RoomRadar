@@ -8,7 +8,7 @@ const ResetPasswordPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
-  const email = sessionStorage.getItem('resetEmail');
+  const email = localStorage.getItem('resetEmail');
   const navigate = useNavigate();
 
   const handleReset = async () => {
@@ -32,7 +32,7 @@ const ResetPasswordPage = () => {
     if (response.ok) {
       setMessage(result);
       setTimeout(() => {
-        sessionStorage.removeItem('resetEmail'); // Clean up after success
+        localStorage.removeItem('resetEmail'); // Clean up after success
         navigate('/login');
       }, 1500);
     } else {

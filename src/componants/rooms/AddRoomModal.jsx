@@ -93,7 +93,7 @@ const handleSubmit = async (e) => {
       setImageError(false); // reset if valid
     }
 
-    const userId = userData?.id || sessionStorage.getItem('userId');
+    const userId = userData?.id || localStorage.getItem('userId');
     if (!userId) {
       throw new Error('User ID is missing. Please re-login.');
     }

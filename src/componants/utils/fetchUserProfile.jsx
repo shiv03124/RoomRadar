@@ -1,19 +1,20 @@
 import axios from 'axios';
 const API_BASE_URL = 'https://roomradarbackend.onrender.com/api/users';
+const api_base="https://roomradarbackend.onrender.com/api/rooms"
 
 const getAuthHeaders = () => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   return {
     'Authorization': `Bearer ${token}`
   };
 };
 
 export const fetchUserProfile = async (navigate) => {
-  const email = sessionStorage.getItem('email');
-  const token = sessionStorage.getItem('token');
+  const email = localStorage.getItem('email');
+  const token = localStorage.getItem('token');
 
   if (!email || !token) {
-    sessionStorage.clear();
+    localStorage.clear();
     navigate('/login');
     return null;
   }
@@ -32,13 +33,13 @@ export const fetchUserProfile = async (navigate) => {
     const data = await response.json();
 
     if (data.id) {
-      sessionStorage.setItem('userId', data.id);
+      localStorage.setItem('userId', data.id);
     }
 
     return data;
   } catch (err) {
     console.error("Error fetching user profile:", err);
-    sessionStorage.clear();
+    localStorage.clear();
     navigate('/login');
     return null;
   }
@@ -59,11 +60,25 @@ export const fetchRooms = async (url) => {
     throw err;
   }
 };
+export const fetchRoomById = async ( publicId) => {
+  try {
+     const response = await fetch(`${api_base}/getRoom/byPublicId/${publicId}`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch room');
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.error("Error fetching room:", err);
+    throw err;
+  }
+};
 
 
 export const fetchApplications = async (userId) => {
   try {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (!userId) {
       throw new Error('Could not retrieve user information');
     }
@@ -87,7 +102,7 @@ export const fetchApplications = async (userId) => {
 
 export const fetchRoomApplications = async (id) => {
   try {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('No authentication token found');
     }
@@ -156,7 +171,7 @@ export const fetchRoomApplications = async (id) => {
 
 export const handleApplicationAction = async (applicationId, action) => {
   try {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('No authentication token found');
     }
@@ -197,7 +212,7 @@ export const handleApplicationAction = async (applicationId, action) => {
 };
 
 export const deleteRoom = async (roomId) => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('Session expired. Please login again.');
   }
@@ -217,7 +232,7 @@ export const deleteRoom = async (roomId) => {
 };
 
 export const addRoom = async (newRoom, userId) => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   
   if (!token) {
     throw new Error('Session expired. Please login again.');
@@ -275,7 +290,7 @@ totalNoOfPeoples:newRoom.totalNoOfPeoples,
 };
 
 export const updateRoom = async (room, roomId) => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('Session expired. Please login again.');
   }
@@ -327,8 +342,8 @@ export const updateRoom = async (room, roomId) => {
 }; 
 
 export const handleApply = async (roomId, message) => {
-  const token = sessionStorage.getItem('token');
-  const email = sessionStorage.getItem('userEmail');
+  const token = localStorage.getItem('token');
+  const email = localStorage.getItem('userEmail');
 
   if (!token || !email) {
     console.warn('User not logged in');
@@ -384,7 +399,7 @@ export const handleApply = async (roomId, message) => {
 
 
 export const updateUserProfile = async (user, userId, imageFile = null) => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   if (!token) throw new Error('Session expired. Please login again.');
 
   const formData = new FormData();
@@ -408,7 +423,7 @@ export const updateUserProfile = async (user, userId, imageFile = null) => {
 
 
 export const fetchUserApplications = async (userId) => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   
   const response = await fetch(`https://roomradarbackend.onrender.com/api/applications/user/${userId}`, {
     method: 'GET',
@@ -494,8 +509,8 @@ export const formatLocalDateTime = (dateTimeString) => {
 
 export const getRoomById = async (roomId) => {
   try {
-    const token = sessionStorage.getItem("token");
-    const response = await fetch(`https://roomradarbackend.onrender.com/api/rooms/getRoom/${roomId}`, {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`https://roomradarbackend.onrender.com/api/rooms/getRoom/byPublicId/${roomId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

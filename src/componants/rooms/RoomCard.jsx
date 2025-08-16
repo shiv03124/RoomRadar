@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { handleApply, fetchUserProfile, formatLocalDateTime, fetchRoomApplications } from '../utils/fetchUserProfile';
 import toast from 'react-hot-toast';
 import { toastOptions } from '../utils/toastConfig';
-import { LoadingToast, SuccessToast, ErrorToast, CloseButton } from '../Toster/ToastMessages';
+import { LoadingToast, SuccessToast, ErrorToast } from '../Toster/ToastMessages';
 import { CiLocationArrow1 } from 'react-icons/ci';
-import RoomDetailsPage from './RoomDetailsPage'; // Import RoomDetailsPage
+import RoomDetailsPage from './RoomDetailsPage';
 import { useNavigate } from 'react-router-dom';
+import { FiShare2 } from 'react-icons/fi';
 
 const RoomCard = ({
   room,
@@ -37,7 +38,7 @@ const RoomCard = ({
       return;
     }
 
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (!token) {
       toast.custom((t) => <ErrorToast message="You must log in to apply for this room." t={t} />, {
         duration: 4000,
@@ -82,6 +83,27 @@ const RoomCard = ({
     onFetchApplications(applications)
   };
 
+  const handleShare = (roomId) => {
+  const url = `${window.location.origin}/room/${roomId}`;
+  navigator.clipboard.writeText(url)
+    .then(() => {
+      toast.custom((t) => (
+        <SuccessToast message="Room link copied to clipboard!" t={t} />
+      ), {
+        duration: 4000,
+        position: 'top-right'
+      });
+    })
+    .catch(() => {
+      toast.custom((t) => (
+        <ErrorToast message="Failed to copy link" t={t} />
+      ), {
+        duration: 4000,
+        position: 'top-right'
+      });
+    });
+};
+
   const handleUserDetailsClick = async (e) => {
     e.stopPropagation();
 
@@ -93,20 +115,20 @@ const RoomCard = ({
         toast.error(<ErrorToast message="Failed to fetch user profile." />, {
           id: toastId,
           ...toastOptions.error,
-          style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
+          style: { background: 'transparent', boxShadow: 'none' },
         });
         return;
       }
 
-      sessionStorage.setItem('userid', profile.id);
-      const token = sessionStorage.getItem('token');
-      const userId = sessionStorage.getItem('userid');
+      localStorage.setItem('userid', profile.id);
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userid');
 
       if (!userId || !token) {
         toast.error(<ErrorToast message="User not logged in or token missing." />, {
           id: toastId,
           ...toastOptions.error,
-          style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
+          style: { background: 'transparent', boxShadow: 'none' },
         });
         return;
       }
@@ -131,7 +153,7 @@ const RoomCard = ({
           id: toastId,
           icon: null,
           ...toastOptions.success,
-          style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
+          style: { background: 'transparent', boxShadow: 'none' },
         });
         setShowModal(true);
       } else {
@@ -142,7 +164,7 @@ const RoomCard = ({
             id: toastId,
             ...toastOptions.error,
             duration: 4000,
-            style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
+            style: { background: 'transparent', boxShadow: 'none' },
           }
         );
       }
@@ -150,7 +172,7 @@ const RoomCard = ({
       toast.error(<ErrorToast message="Error fetching application status." />, {
         id: toastId,
         ...toastOptions.error,
-        style: { background: 'transparent', boxShadow: 'none' }, // Remove default toast background
+        style: { background: 'transparent', boxShadow: 'none' },
       });
     }
   };
@@ -160,7 +182,7 @@ const RoomCard = ({
 
   return (
     <div>
-      <div className="w-full bg-white shadow-sm border rounded-xl p-4 hover:shadow-md transition-shadow duration-300 flex flex-col sm:flex-row gap-4 cursor-pointer" >
+      <div className="w-full bg-white shadow-sm border rounded-xl p-4 hover:shadow-md transition-shadow duration-300 flex flex-col sm:flex-row gap-4 cursor-pointer">
         {/* Left: Room Image */}
         <div className="w-full md:w-1/4 h-36">
           {room.images?.[0] ? (
@@ -179,38 +201,49 @@ const RoomCard = ({
         {/* Right: Room Details */}
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              {room.title || 'Untitled Room'}
-            </h3>
-            <p className="text-sm text-gray-500">{room.area}, {room.city}</p>
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {room.title || 'Untitled Room'}
+                </h3>
+                <div className="flex items-center gap-1">
+                  <p className="text-sm text-gray-500">{room.area}, {room.city}</p>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleShare(room.publicId); }}
+                    className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                    title="Copy link"
+                  >
+                    <FiShare2 className="text-gray-500 w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
             {isAppliedView && formattedDate && (
               <p className="text-xs text-gray-400 mt-1">Applied on: {formattedDate}</p>
             )}
           </div>
 
-         <div className="mt-3">
-  <div className="grid grid-cols-4 gap-4 text-sm">
-
+          <div className="mt-3">
+            <div className="grid grid-cols-4 gap-4 text-sm">
               <div>
-                <p className="text-gray-400">Rent</p>
+                <p className="text-gray-400">Rent/person</p>
                 <p className="font-medium text-gray-900">₹{room.rent || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-gray-400">Deposit</p>
+                <p className="text-gray-400">Deposit/person</p>
                 <p className="font-medium text-gray-900">₹{room.securityDeposit || 'N/A'}</p>
               </div>
               <div>
                 <p className="text-gray-400">Vacancies</p>
                 <p className="font-medium text-gray-900">{room.noofvacancies || 0}</p>
               </div>
-               <div>
+              <div>
                 <p className="text-gray-400">Total person</p>
                 <p className="font-medium text-gray-900">{room.totalNoOfPeoples || 0}</p>
               </div>
             </div>
 
-            <div className="flex flex-row flex-wrap sm:flex-row justify-center items-center gap-2 mt-2">
-
+            <div className="flex flex-row flex-wrap sm:flex-row justify-center items-center gap-2 mt-3">
               {isAppliedView ? (
                 <>
                   <button
@@ -230,7 +263,6 @@ const RoomCard = ({
                 <>
                   <button
                     onClick={(e) => { e.stopPropagation(); onViewDetails(e); }}
-                    // <== VIEW button always same styling, no condition here
                     className="min-w-[200px] px-4 py-1.5 md:pb-2 text-sm rounded-md bg-[#0662B7] text-white hover:bg-indigo-700"
                   >
                     View
@@ -265,7 +297,6 @@ const RoomCard = ({
 
             {showMessageInput && !applied && (
               <div className="mt-3 flex flex-col sm:flex-row gap-2 w-full">
-
                 <input
                   type="text"
                   className="flex-1 px-3 py-2 border rounded-md text-sm outline-none focus:ring-2 focus:[#0662B7]"
@@ -285,31 +316,31 @@ const RoomCard = ({
             )}
           </div>
         </div>
-
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full">
-              <h2 className="text-lg font-semibold mb-2">Owner Details</h2>
-              <p><strong>Name:</strong> {room?.user?.fullName || 'N/A'}</p>
-              <p><strong>Email:</strong> {room?.user?.email || 'N/A'}</p>
-              <p><strong>Phone:</strong> {room?.user?.phone || 'N/A'}</p>
-              <button
-                onClick={() => setShowModal(false)}
-                className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full">
+            <h2 className="text-lg font-semibold mb-2">Owner Details</h2>
+            <p><strong>Name:</strong> {room?.user?.fullName || 'N/A'}</p>
+            <p><strong>Email:</strong> {room?.user?.email || 'N/A'}</p>
+            <p><strong>Phone:</strong> {room?.user?.phone || 'N/A'}</p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Inline Room Details Below the Card */}
       {isExpanded && (
-        <div className="mt-4 border rounded-lg p-4 bg-gray-50 shadow-inner relative"> {/* Add relative positioning */}
+        <div className="mt-4 border rounded-lg p-4 bg-gray-50 shadow-inner relative">
           <RoomDetailsPage 
-            roomId={room.id} 
-            onClose={onCloseDetails} // Pass the close handler
+            roomId={room.publicId} 
+            onClose={onCloseDetails}
           />
         </div>
       )}
@@ -327,7 +358,7 @@ export const RoomCardGrid = ({ rooms, activeTab, onFetchApplications, isAppliedV
             activeTab={activeTab}
             onFetchApplications={onFetchApplications}
             isAppliedView={isAppliedView}
-            onViewDetails={(e) => onViewDetails(room.id, e)}
+             onViewDetails={(e) => onViewDetails(room.publicId, e)} 
           />
         </div>
       ))}

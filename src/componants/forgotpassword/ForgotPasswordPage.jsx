@@ -30,7 +30,7 @@ const ForgotPasswordPage = () => {
       const result = await response.text();
 
       if (response.ok) {
-        sessionStorage.setItem('resetEmail', email);
+        localStorage.setItem('resetEmail', email);
         setMessage('OTP sent successfully! Redirecting...');
         setTimeout(() => navigate('/verify-otp'), 1500);
       } else {

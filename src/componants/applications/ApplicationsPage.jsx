@@ -7,7 +7,7 @@ const ApplicationsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const userId = sessionStorage.getItem('userId'); // Or get from context/state
+  const userId = localStorage.getItem('userId'); // Or get from context/state
 
   useEffect(() => {
     const loadData = async () => {

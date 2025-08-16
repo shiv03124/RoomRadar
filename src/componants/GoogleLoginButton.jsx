@@ -31,7 +31,7 @@ const GoogleLoginButton = () => {
       const data = await response.json();
 
       // Save token and email in session
-      sessionStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.token);
       login(data.token, data.email);
 
       navigate('/dashboard');

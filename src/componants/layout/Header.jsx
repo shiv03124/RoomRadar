@@ -10,8 +10,8 @@ const Header = ({ userData, setUserData, className = "", style = {} }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const token = sessionStorage.getItem("token");
-  const role = userData?.role || sessionStorage.getItem("role");
+  const token = localStorage.getItem("token");
+  const role = userData?.role || localStorage.getItem("role");
   const activeTab = location.pathname;
 
   const handleAddRoomClick = () => {

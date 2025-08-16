@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import RoomCard from '../rooms/RoomCard';
-import { fetchRooms, fetchUserProfile, fetchRoomApplications } from '../utils/fetchUserProfile';
+import { fetchRooms, fetchUserProfile } from '../utils/fetchUserProfile';
 import { Skeleton } from '../ui/Skeleton';
 import { NoRoomsPlaceholder } from '../ui/NoRoomsPlaceholder';
 import { useParams } from 'react-router-dom';
@@ -17,8 +17,8 @@ const ListingsPage = () => {
 
  const loadRooms = async () => {
   setLoading(true);
-  const token = sessionStorage.getItem('token');
-  const userId = sessionStorage.getItem('userId'); // assuming you store userId here
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId'); // assuming you store userId here
   setUserData(null); // reset userData at start or remove if not needed
 
   try {

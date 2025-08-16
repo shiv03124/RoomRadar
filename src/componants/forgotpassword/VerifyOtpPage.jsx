@@ -5,7 +5,7 @@ const VerifyOtpPage = () => {
   const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const email = sessionStorage.getItem('resetEmail');
+  const email = localStorage.getItem('resetEmail');
 
   useEffect(() => {
     if (!email) {
@@ -24,7 +24,7 @@ const VerifyOtpPage = () => {
       const data = await response.text();
       if (data === 'OTP verified.') {
         setMessage('OTP verified successfully.');
-        sessionStorage.setItem('otp',otp)
+        localStorage.setItem('otp',otp)
         setTimeout(() => navigate('/reset-password'), 1500);
       } else {
         setMessage('Invalid OTP.');

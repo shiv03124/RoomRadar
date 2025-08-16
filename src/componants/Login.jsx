@@ -38,13 +38,13 @@ const Login = () => {
 
       // Store token and email
       login(data.token, email);
-      sessionStorage.setItem('token', data.token);
-      sessionStorage.setItem('email', email);
-      sessionStorage.setItem('role', 'user');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('email', email);
+      localStorage.setItem('role', 'user');
 
       const profile = await fetchUserProfile(navigate);
       if (profile && profile.id) {
-        sessionStorage.setItem('userId', profile.id);
+        localStorage.setItem('userId', profile.id);
       }
 
       navigate('/dashboard');

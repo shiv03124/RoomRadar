@@ -20,7 +20,7 @@ import ListingsPage from './componants/rooms/ListingsPage';
 import AdminLogin from './componants/AdminLogin';
 
 function ProtectedRoute({ children, allowedRoles }) {
-  const role = sessionStorage.getItem("role");
+  const role = localStorage.getItem("role");
   if (!role || !allowedRoles.includes(role)) {
     return <Navigate to="/login" replace />;
   }
@@ -33,9 +33,9 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const email = sessionStorage.getItem("email");
-    const role = sessionStorage.getItem("role");
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    const role = localStorage.getItem("role");
 
     if (token && email && role !== "admin") {
       fetchUserProfile(token)
@@ -53,9 +53,9 @@ function App() {
   }, []);
 
   const handleLoginSuccess = async (data, role) => {
-    sessionStorage.setItem("token", data.token);
-    sessionStorage.setItem("email", data.email);
-    sessionStorage.setItem("role", role);
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("email", data.email);
+    localStorage.setItem("role", role);
 
     if (role === "admin") {
       setUserData({ email: data.email, role, token: data.token });
@@ -72,7 +72,7 @@ function App() {
     }
   };
 
-  const hideHeaderOnRoutes = ["/", "/login", "/signup"];
+  const hideHeaderOnRoutes = ["/", "/login", "/signup","/adminlogin"];
   const shouldShowHeader = !hideHeaderOnRoutes.includes(location.pathname);
 
   return (

@@ -24,7 +24,7 @@ const Dashboard = () => {
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
     try {
-      const userId = sessionStorage.getItem('userId');
+      const userId = localStorage.getItem('userId');
       let url = `https://roomradarbackend.onrender.com/api/rooms/approved?accommodationType=${selectedAccommodation}`;
 
       if (userId) {
@@ -81,7 +81,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pt-20 h-[calc(100vh-5rem)] overflow-y-auto pb-20">
+    <div className="max-w-7xl mx-auto px-4 pt-20 h-[calc(100vh-5rem)]  pb-20">
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
         {/* Accommodation Tabs */}
@@ -122,7 +122,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredRooms.map((room) => (
             <React.Fragment key={room.id}>
-              <RoomCard
+              <RoomCard 
                 room={room}
                 onViewDetails={() => setSelectedRoom(room)}
                 activeTab="All Listings"
@@ -142,7 +142,7 @@ const Dashboard = () => {
                       ✕
                     </button>
                     <RoomDetailsPage
-                      roomId={room.id}
+                      roomId={room.publicId}
                       onClose={() => setSelectedRoom(null)}
                     />
                   </motion.div>
